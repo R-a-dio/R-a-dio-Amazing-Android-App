@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">R/a/dio</string>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <string name="home_page">Home</string>
+    <string name="request_page">Request</string>
+    <string name="news_page">News</string>
+    <string name="schedule_page">Schedule</string>
+    <string name="title_activity_slided">LeftSlider</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

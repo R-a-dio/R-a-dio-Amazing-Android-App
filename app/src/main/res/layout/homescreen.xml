@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:label="@string/home_page"
+    android:weightSum="1"
+    android:orientation="vertical">
+
+    <!--
+    Kilim's Kool Komments
+
+        This covers the Header part. This will be a constant throughout the rest of the pages.
+        Just need to figure out how to do the cool little bubble transitions I had in the mockups,
+        but other than that everything's done. The next comment will denote when the next part of
+        the app starts.
+
+        eof
+    -->
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:weightSum="1"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="63dp"
+                android:layout_height="49dp"
+                app:srcCompat="@drawable/actionbar_logo"
+                android:id="@+id/main_logo"
+                android:elevation="0dp"
+                android:layout_gravity="center_vertical" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="1">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.39" />
+
+                <TextView
+                    android:text="R/a/dio"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView3"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></LinearLayout>
+
+</LinearLayout>
