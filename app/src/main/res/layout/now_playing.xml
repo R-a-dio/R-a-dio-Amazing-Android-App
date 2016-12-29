@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/black"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <!--
+     Kilim's Kool Komments
+     The Main Meal Starts Here.
+
+     -->
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom|fill_horizontal"
+        android:layout_height="175dp"
+        android:id="@+id/now_playing_info">
+
+        <ProgressBar
+            android:id="@+id/progressBar3"
+            android:layout_width="match_parent"
+            android:layout_height="24dip"
+            android:layout_marginTop="42dip"
+            android:layout_gravity="fill_horizontal"
+
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+
+            android:progressBackgroundTint="@android:color/darker_gray"
+
+            tools:progress="32"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
+
+        <TextView
+            android:text="Kilim - Sakura;AD.vent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tags"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp" />
+
+        <TextView
+            android:text="00:32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_elapsed"
+            android:layout_marginTop="66dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:paddingLeft="10dp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="04:36"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/total_time"
+            android:layout_gravity="right"
+            android:layout_marginTop="66dp"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorPrimary"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:text="Up Next:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/upnext"
+            android:layout_gravity="center_horizontal"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:layout_marginTop="110dp" />
+
+        <TextView
+            android:text="Vin - Wesse it's Cold Outside"
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:id="@+id/nextsong"
+            android:gravity="bottom|center"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:textAlignment="center" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/dj_name_icon"
+        android:layout_gravity="top|fill_horizontal"
+        android:layout_height="140dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/backdj"
+            android:id="@+id/background"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="30dp" />
+
+        <TextView
+            android:text="Listeners: 165"
+            android:layout_width="158dp"
+            android:id="@+id/listeners"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:paddingLeft="46dp"
+            android:gravity="bottom"
+            android:layout_height="130dp" />
+
+        <TextView
+            android:text="Hanyuu-Sama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dj_name"
+            android:layout_marginTop="77dp"
+            android:textSize="14sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/orange"
+            android:layout_marginLeft="146dp" />
+
+        <TextView
+            android:text="You're Listening to:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ylt"
+            android:layout_marginTop="77dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/dark"
+            android:textSize="14sp"
+            android:textStyle="normal|bold" />
+
+        <ImageView
+            android:layout_width="129dp"
+            android:layout_height="110dp"
+            app:srcCompat="@drawable/dj_image"
+            android:id="@+id/dj_avatar"
+            android:layout_gravity="right"
+            android:layout_marginTop="26dp" />
+
+    </FrameLayout>
+
+    <ImageButton
+        app:srcCompat="@drawable/arrow_small"
+        android:id="@+id/play_pause"
+        android:contentDescription="playpause"
+        android:background="?attr/selectableItemBackground"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:cropToPadding="false"
+        android:contextClickable="false"
+        android:adjustViewBounds="false"
+        android:layout_width="167dp"
+        android:layout_height="167dp"
+        android:layout_marginBottom="20dp" />
+
+</FrameLayout>
