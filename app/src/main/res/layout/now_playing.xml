@@ -159,6 +159,7 @@
         android:adjustViewBounds="false"
         android:layout_width="167dp"
         android:layout_height="167dp"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:onClick="togglePlayPause" />
 
 </FrameLayout>
