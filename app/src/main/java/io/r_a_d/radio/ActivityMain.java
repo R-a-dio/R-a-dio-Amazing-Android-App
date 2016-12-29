@@ -40,6 +40,15 @@ public class ActivityMain extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer.release();
+    }
+
     public void togglePlayPause(View v) throws IOException {
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
         if(!playing){
