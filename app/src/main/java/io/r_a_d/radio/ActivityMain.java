@@ -1,5 +1,6 @@
 package io.r_a_d.radio;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,9 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -126,19 +128,68 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void updateUI(){
         try {
             View now_playing = viewPager.getChildAt(0);
+            JSONObject djdata = new JSONObject(current_ui_json.getString("dj"));
+            JSONArray queue_list = current_ui_json.getJSONArray("queue");
+            JSONArray last_played_list = current_ui_json.getJSONArray("lp");
+
             TextView np = (TextView)now_playing.findViewById(R.id.tags);
             String tags = current_ui_json.getString("np");
 
+
+            TextView ls = (TextView)now_playing.findViewById(R.id.listeners);
+            String listeners = current_ui_json.getString("listeners");
+
+            TextView dj_name = (TextView)now_playing.findViewById(R.id.dj_name);
+            String djname = djdata.getString("djname");
+
+            Integer song_length = current_ui_json.getInt("end_time") - current_ui_json.getInt("start_time");
+            Integer song_length_minutes = song_length / 60;
+            Integer song_length_seconds = song_length % 60;
+            Integer song_length_position = current_ui_json.getInt("current") - current_ui_json.getInt("start_time");
+            Integer song_length_position_minutes = song_length_position / 60;
+            Integer song_length_position_seconds = song_length_position % 60;
+            TextView te = (TextView)now_playing.findViewById(R.id.time_elapsed);
+            TextView tt = (TextView)now_playing.findViewById(R.id.total_time);
+            ProgressBar pb = (ProgressBar)now_playing.findViewById(R.id.progressBar3);
+
+
+            //String[] djcolor = djdata.getString("djcolor").split(" ");
+            //Integer djhex = Color.rgb(Integer.valueOf(djcolor[0]), Integer.valueOf(djcolor[1]), Integer.valueOf(djcolor[2]));
+
+            TextView nextsong = (TextView)now_playing.findViewById(R.id.nextsong);
+            String ns = queue_list.getJSONObject(0).getString("meta");
+
             if(!np.getText().toString().equals(tags))
                 np.setText(tags);
-
-            if(!np.isSelected()) {
+                tt.setText(song_length_minutes.toString() + ":" + String.format("%02d", song_length_seconds));
+                pb.setMax(song_length);
+            if (!np.isSelected()) {
                 np.setMarqueeRepeatLimit(-1);
                 np.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 np.setHorizontallyScrolling(true);
                 np.setMaxLines(1);
                 np.setSelected(true);
             }
+            te.setText(song_length_position_minutes.toString() + ":" + String.format("%02d", song_length_position_seconds));
+            pb.setProgress(song_length_position);
+
+            ls.setText("Listeners: " + listeners);
+
+
+            if(!dj_name.getText().toString().equals(djname))
+                dj_name.setText(djname);
+            //dj_name.setTextColor(djhex);
+
+            if(!nextsong.getText().toString().equals(ns))
+                nextsong.setText(ns);
+            if (!nextsong.isSelected()) {
+                nextsong.setMarqueeRepeatLimit(-1);
+                nextsong.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                nextsong.setHorizontallyScrolling(true);
+                nextsong.setMaxLines(1);
+                nextsong.setSelected(true);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
