@@ -13,8 +13,9 @@ import java.io.IOException;
 
 public class ActivityMain extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer = null;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     private boolean playing = false;
+    private String radio_url = "https://stream.r-a-d.io/main.mp3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +25,20 @@ public class ActivityMain extends AppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
         viewPager.setOffscreenPageLimit(3);
+        setupMediaPlayer();
+    }
 
-        mediaPlayer = new MediaPlayer();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.reset();
+        mediaPlayer.release();
+    }
+
+    public void setupMediaPlayer() {
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setDataSource(this, Uri.parse("https://stream.r-a-d.io/main.mp3"));
+            mediaPlayer.setDataSource(radio_url);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,15 +50,6 @@ public class ActivityMain extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-        mediaPlayer.release();
-    }
-
     public void togglePlayPause(View v) throws IOException {
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
         if(!playing){
@@ -57,20 +58,8 @@ public class ActivityMain extends AppCompatActivity {
             playing = true;
         } else {
             img.setImageResource(R.drawable.arrow_small);
-            mediaPlayer.stop();
             mediaPlayer.reset();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            try {
-                mediaPlayer.setDataSource(this, Uri.parse("https://stream.r-a-d.io/main.mp3"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                }
-            });
+            setupMediaPlayer();
             playing = false;
         }
     }
