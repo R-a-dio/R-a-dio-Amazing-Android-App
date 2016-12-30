@@ -57,6 +57,7 @@ public class ActivityMain extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
         viewPager.setOffscreenPageLimit(3);
+        scrapeJSON(api_url);
         setupMediaPlayer();
         handler.postDelayed(new Runnable(){
             public void run(){
