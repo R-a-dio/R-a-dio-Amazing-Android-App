@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -30,7 +31,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
 
-public class ActivityMain extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
     private boolean playing = false;
     private SimpleExoPlayer sep;
@@ -57,8 +58,12 @@ public class ActivityMain extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
         viewPager.setOffscreenPageLimit(3);
+
+        viewPager.addOnPageChangeListener(this);
+
         scrapeJSON(api_url);
         setupMediaPlayer();
+
         handler.postDelayed(new Runnable(){
             public void run(){
                 scrapeJSON(api_url);
@@ -73,6 +78,36 @@ public class ActivityMain extends AppCompatActivity {
         sep.stop();
         sep.release();
         sep = null;
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        TextView title_text = (TextView)findViewById(R.id.radio);
+        View page = viewPager.getChildAt(position);
+
+        int pageID = page.getId();
+
+        switch (pageID){
+            case R.id.now_playing_page:
+                title_text.setText(R.string.app_name);
+                break;
+            case R.id.requests_page:
+                title_text.setText(R.string.request_page);
+                break;
+            case R.id.news_page:
+                title_text.setText(R.string.news_page);
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        return;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        return;
     }
 
     public void setupMediaPlayer() {
