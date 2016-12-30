@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -90,7 +91,18 @@ public class ActivityMain extends AppCompatActivity {
         try {
             View now_playing = viewPager.getChildAt(0);
             TextView np = (TextView)now_playing.findViewById(R.id.tags);
-            np.setText(current_ui_json.getString("np"));
+            String tags = current_ui_json.getString("np");
+
+            if(!np.getText().toString().equals(tags))
+                np.setText(tags);
+
+            if(!np.isSelected()) {
+                np.setMarqueeRepeatLimit(-1);
+                np.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                np.setHorizontallyScrolling(true);
+                np.setMaxLines(1);
+                np.setSelected(true);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

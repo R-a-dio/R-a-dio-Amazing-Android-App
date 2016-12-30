@@ -54,10 +54,7 @@
             android:textColor="@color/white"
             android:textSize="28sp"
             android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:marqueeRepeatLimit="marquee_forever" />
+            android:layout_marginRight="18dp" />
 
         <TextView
             android:text="04:36"
