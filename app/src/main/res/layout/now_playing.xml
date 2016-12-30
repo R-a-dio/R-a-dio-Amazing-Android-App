@@ -48,15 +48,17 @@
 
 
         <TextView
-            android:text="Please Wait, Loading..."
+            android:text="@string/connecting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tags"
             android:textIsSelectable="true"
             android:textColor="@color/white"
-            android:textSize="40sp"
+            android:textSize="34sp"
             android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp" />
+            android:layout_marginRight="18dp"
+            android:fadingEdge="horizontal"
+            android:singleLine="false" />
 
         <TextView
             android:text="04:36"
