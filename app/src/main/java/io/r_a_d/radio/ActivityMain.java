@@ -20,7 +20,7 @@ public class ActivityMain extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer = new MediaPlayer();
     private boolean playing = false;
-    private Integer api_update_delay = 1000;
+    private Integer api_update_delay = 10000;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this);
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
