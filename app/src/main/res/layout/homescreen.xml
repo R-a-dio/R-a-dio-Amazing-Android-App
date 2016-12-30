@@ -58,13 +58,13 @@
                     android:gravity="center_vertical" />
 
                 <android.support.design.widget.TabLayout
-                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
                     android:id="@+id/tab_dots"
                     app:tabIndicatorHeight="0dp"
                     app:tabGravity="center"
-                    app:tabBackground="@drawable/tab_selector"/>
+                    app:tabBackground="@drawable/tab_selector"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="50dp" />
 
             </LinearLayout>
         </LinearLayout>
