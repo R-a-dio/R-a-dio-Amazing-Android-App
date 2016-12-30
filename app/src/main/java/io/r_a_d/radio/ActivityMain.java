@@ -186,13 +186,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             if(!nextsong.getText().toString().equals(ns))
                 nextsong.setText(ns);
-            if (!nextsong.isSelected()) {
+            /*
+                if (!nextsong.isSelected()) {
                 nextsong.setMarqueeRepeatLimit(-1);
                 nextsong.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                 nextsong.setHorizontallyScrolling(true);
                 nextsong.setMaxLines(1);
                 nextsong.setSelected(true);
             }
+
+            */
 
         } catch (JSONException e) {
             e.printStackTrace();

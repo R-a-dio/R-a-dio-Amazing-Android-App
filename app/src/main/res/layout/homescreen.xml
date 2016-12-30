@@ -105,16 +105,10 @@
         android:dividerHeight="0dp"
         android:background="#111">
 
-        <TextView
-            android:text="lastplayed and queue will go here, along with a
-            quick control of some sort to easily pause/play the stream
-            maybe idk yet lol. also this is where you'll see the playlist
-            view that we talked about come into play, hopefully, idk if
-            it'll be possible with my knowledge!!"
+        <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:id="@+id/preambl" />
+            layout="@layout/queue_lp" />
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

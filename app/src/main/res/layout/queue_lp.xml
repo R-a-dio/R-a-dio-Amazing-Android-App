@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/qlp_storage">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:id="@+id/thread_container"
+        android:weightSum="1">
+
+
+        <TextView
+            android:text="No Thread Up"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/thread"
+            android:textColor="@color/dark"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <TextView
+            android:text="Last Played"
+            android:layout_width="match_parent"
+            android:id="@+id/lp_label"
+            android:textSize="14sp"
+            android:textColor="@color/orange"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"
+            android:layout_weight="0.07"
+            android:gravity="bottom"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:text="pellet222 - sonic racing"
+            android:layout_width="match_parent"
+            android:id="@+id/lp4"
+            android:textSize="12sp"
+            android:textColor="@color/whited5"
+            android:textAlignment="center"
+            android:layout_weight="0.06"
+            android:layout_height="24dp"
+            android:gravity="bottom" />
+
+        <TextView
+            android:text="Kilim - sonic racing (cover)"
+            android:layout_width="match_parent"
+            android:id="@+id/lp3"
+            android:textColor="@color/whited4"
+            android:textAlignment="center"
+            android:layout_height="22dp"
+            android:gravity="bottom" />
+
+        <TextView
+            android:text="Vin - sweden racer"
+            android:layout_width="match_parent"
+            android:id="@+id/lp2"
+            android:textSize="16sp"
+            android:textColor="@color/whited3"
+            android:textAlignment="center"
+            android:layout_height="24dp"
+            android:gravity="bottom" />
+
+        <TextView
+            android:text="Ghostlyy - video games racer"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:id="@+id/lp1"
+            android:textSize="18sp"
+            android:textColor="@color/whited2"
+            android:textAlignment="center"
+            android:gravity="bottom" />
+
+        <TextView
+            android:text="Wessie - vin's cock racer"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:id="@+id/lp0"
+            android:textSize="20sp"
+            android:textColor="@color/whited"
+            android:textAlignment="center"
+            android:gravity="bottom" />
+
+        <TextView
+            android:text="Now Playing"
+            android:layout_width="match_parent"
+            android:id="@+id/np_label"
+            android:textSize="14sp"
+            android:textColor="@color/orange"
+            android:textAlignment="center"
+            android:gravity="bottom"
+            android:layout_height="50dp"
+            android:paddingBottom="5dp" />
+
+        <TextView
+            android:text="Kilim - Sakura Field Trip (jponry)"
+            android:layout_width="match_parent"
+            android:id="@+id/np_"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:layout_height="80dp" />
+
+        <TextView
+            android:text="Queue"
+            android:layout_width="match_parent"
+            android:id="@+id/q_label"
+            android:textColor="@color/orange"
+            android:textStyle="normal|bold"
+            android:textAlignment="center"
+            android:gravity="top"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:text="Nintendo - I'm a dump jap lol"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:id="@+id/q1"
+            android:textColor="@color/whited"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:gravity="top" />
+
+        <TextView
+            android:text="2B - Platinum Games Ass"
+            android:layout_width="match_parent"
+            android:layout_height="26dp"
+            android:id="@+id/q2"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:textColor="@color/whited2"
+            android:gravity="top" />
+
+        <TextView
+            android:text="Wessie - I insult people for no reason"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:id="@+id/q3"
+            android:textColor="@color/whited3"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:gravity="top" />
+
+        <TextView
+            android:text="Kilim - Stronger than U"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:id="@+id/q4"
+            android:textColor="@color/whited4"
+            android:textAlignment="center"
+            android:gravity="top" />
+
+        <TextView
+            android:text="exci - gm"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/q5"
+            android:textColor="@color/whited5"
+            android:textAlignment="center"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
