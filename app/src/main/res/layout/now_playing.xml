@@ -17,14 +17,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_gravity="bottom|fill_horizontal"
-        android:layout_height="175dp"
+        android:layout_height="188dp"
         android:id="@+id/now_playing_info">
 
         <ProgressBar
             android:id="@+id/progressBar3"
             android:layout_width="match_parent"
             android:layout_height="24dip"
-            android:layout_marginTop="42dip"
+            android:layout_marginTop="48dip"
             android:layout_gravity="fill_horizontal"
 
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -36,16 +36,6 @@
             android:paddingRight="15dp" />
 
         <TextView
-            android:text="Kilim - Sakura;AD.vent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tags"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp" />
-
-        <TextView
             android:text="00:32"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,6 +45,19 @@
             android:textSize="14sp"
             android:paddingLeft="10dp"
             android:gravity="left" />
+
+        <TextView
+            android:text="Please Wait, Loading..."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tags"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever" />
 
         <TextView
             android:text="04:36"
@@ -90,6 +93,20 @@
 
     </FrameLayout>
 
+    <ImageButton
+        app:srcCompat="@drawable/arrow_small"
+        android:id="@+id/play_pause"
+        android:contentDescription="playpause"
+        android:background="?attr/selectableItemBackground"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:cropToPadding="false"
+        android:contextClickable="false"
+        android:adjustViewBounds="false"
+        android:layout_width="167dp"
+        android:layout_height="167dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="togglePlayPause" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/dj_name_icon"
@@ -117,17 +134,6 @@
             android:layout_height="130dp" />
 
         <TextView
-            android:text="Hanyuu-Sama"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dj_name"
-            android:layout_marginTop="77dp"
-            android:textSize="14sp"
-            android:textStyle="normal|bold"
-            android:textColor="@color/orange"
-            android:layout_marginLeft="146dp" />
-
-        <TextView
             android:text="You're Listening to:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -146,20 +152,17 @@
             android:layout_gravity="right"
             android:layout_marginTop="26dp" />
 
-    </FrameLayout>
+        <TextView
+            android:text="Hanyuu-Sama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dj_name"
+            android:layout_marginTop="77dp"
+            android:textSize="14sp"
+            android:textStyle="normal|bold"
+            android:textColor="@color/orange"
+            android:layout_marginLeft="146dp" />
 
-    <ImageButton
-        app:srcCompat="@drawable/arrow_small"
-        android:id="@+id/play_pause"
-        android:contentDescription="playpause"
-        android:background="?attr/selectableItemBackground"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:cropToPadding="false"
-        android:contextClickable="false"
-        android:adjustViewBounds="false"
-        android:layout_width="167dp"
-        android:layout_height="167dp"
-        android:layout_marginBottom="20dp"
-        android:onClick="togglePlayPause" />
+    </FrameLayout>
 
 </FrameLayout>
