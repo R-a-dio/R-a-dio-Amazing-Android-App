@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -60,6 +61,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.setOffscreenPageLimit(3);
 
         viewPager.addOnPageChangeListener(this);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_dots);
+        tabLayout.setupWithViewPager(viewPager, true);
 
         scrapeJSON(api_url);
         setupMediaPlayer();

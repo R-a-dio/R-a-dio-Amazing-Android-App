@@ -42,19 +42,29 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="272dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:weightSum="1"
                 android:id="@+id/title_bar">
 
                 <TextView
                     android:text="@string/app_name"
                     android:textColor="@color/white"
-                    android:layout_width="105dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/radio"
                     android:textSize="22sp"
                     android:paddingLeft="12dp"
+                    android:paddingTop="8dp"
                     android:gravity="center_vertical" />
+
+                <android.support.design.widget.TabLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:id="@+id/tab_dots"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabGravity="center"
+                    app:tabBackground="@drawable/tab_selector"/>
 
             </LinearLayout>
         </LinearLayout>
