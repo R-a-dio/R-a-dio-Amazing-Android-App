@@ -112,8 +112,8 @@ public class ActivityMain extends AppCompatActivity {
         if(!playing){
             img.setImageResource(R.drawable.pause_small);
             playing = true;
-            sep.setPlayWhenReady(playing);
             sep.seekToDefaultPosition();
+            sep.setPlayWhenReady(playing);
         } else {
             img.setImageResource(R.drawable.arrow_small);
             playing = false;
