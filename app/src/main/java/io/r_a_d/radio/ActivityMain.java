@@ -33,17 +33,25 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
     private boolean playing = false;
+    private boolean songChanged = false;
     private SimpleExoPlayer sep;
     private Integer api_update_delay = 10000;
+    private final Integer UPDATE_INTERVAL = 500;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this);
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
     private String api_url = "https://r-a-d.io/api";
     public JSONObject current_ui_json;
+    private Thread songCalcThread;
+    private final Object lock = new Object();
+    private HashMap<String, Integer> songTimes;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -57,6 +65,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homescreen);
+        songTimes = new HashMap<>();
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
@@ -76,6 +85,15 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 handler.postDelayed(this, api_update_delay);
             }
         }, api_update_delay);
+
+        songCalcThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                calculateSongTimes();
+            }
+        });
+        songCalcThread.setDaemon(true);
+        songCalcThread.start();
     }
 
     @Override
@@ -84,6 +102,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         sep.stop();
         sep.release();
         sep = null;
+
+        if(songCalcThread.isAlive() && !songCalcThread.isInterrupted())
+            songCalcThread.interrupt();
     }
 
     @Override
@@ -146,15 +167,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             TextView dj_name = (TextView)now_playing.findViewById(R.id.dj_name);
             String djname = djdata.getString("djname");
 
-            Integer song_length = current_ui_json.getInt("end_time") - current_ui_json.getInt("start_time");
-            Integer song_length_minutes = song_length / 60;
-            Integer song_length_seconds = song_length % 60;
-            Integer song_length_position = current_ui_json.getInt("current") - current_ui_json.getInt("start_time");
-            Integer song_length_position_minutes = song_length_position / 60;
-            Integer song_length_position_seconds = song_length_position % 60;
-            TextView te = (TextView)now_playing.findViewById(R.id.time_elapsed);
-            TextView tt = (TextView)now_playing.findViewById(R.id.total_time);
-            ProgressBar pb = (ProgressBar)now_playing.findViewById(R.id.progressBar3);
+            Integer song_start = current_ui_json.getInt("start_time");
+            Integer song_end = current_ui_json.getInt("end_time");
+            Integer song_length_position = current_ui_json.getInt("current") - song_start;
 
 
             //String[] djcolor = djdata.getString("djcolor").split(" ");
@@ -163,10 +178,18 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             TextView nextsong = (TextView)now_playing.findViewById(R.id.nextsong);
             String ns = queue_list.getJSONObject(0).getString("meta");
 
-            if(!np.getText().toString().equals(tags))
+            if(!np.getText().toString().equals(tags)) {
                 np.setText(tags);
-                tt.setText(song_length_minutes.toString() + ":" + String.format("%02d", song_length_seconds));
-                pb.setMax(song_length);
+                synchronized (lock)
+                {
+                    songTimes.put("start", song_start);
+                    songTimes.put("end", song_end);
+                    songTimes.put("position", song_length_position);
+                    songChanged = true;
+                }
+                //pb.setMax(song_length);
+            }
+
             if (!np.isSelected()) {
                 np.setMarqueeRepeatLimit(-1);
                 np.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -174,8 +197,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 np.setMaxLines(1);
                 np.setSelected(true);
             }
-            te.setText(song_length_position_minutes.toString() + ":" + String.format("%02d", song_length_position_seconds));
-            pb.setProgress(song_length_position);
+            //pb.setProgress(song_length_position);
 
             ls.setText("Listeners: " + listeners);
 
@@ -186,16 +208,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             if(!nextsong.getText().toString().equals(ns))
                 nextsong.setText(ns);
-            /*
-                if (!nextsong.isSelected()) {
-                nextsong.setMarqueeRepeatLimit(-1);
-                nextsong.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                nextsong.setHorizontallyScrolling(true);
-                nextsong.setMaxLines(1);
-                nextsong.setSelected(true);
-            }
-
-            */
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -211,6 +223,98 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void setUIJSON(String jsonString) throws JSONException {
         current_ui_json = new JSONObject(new JSONObject(jsonString).getString("main"));
         updateUI();
+    }
+
+    private void updateSongProgress(HashMap<String, Integer> values)
+    {
+        View now_playing = viewPager.getChildAt(0);
+
+        if(now_playing != null) {
+            ProgressBar pb = (ProgressBar) now_playing.findViewById(R.id.progressBar3);
+            TextView te = (TextView) now_playing.findViewById(R.id.time_elapsed);
+            TextView tt = (TextView) now_playing.findViewById(R.id.total_time);
+
+            if (values.containsKey("length")) {
+                pb.setProgress(0);
+                pb.setMax(values.get("length"));
+            }
+
+            if (values.containsKey("position")) {
+                Integer position = values.get("position");
+
+                if (position <= pb.getMax())
+                    pb.setProgress(position);
+            }
+
+            if (values.containsKey("totalMinutes") && values.containsKey("totalSeconds")) {
+                Integer minutes = values.get("totalMinutes");
+                Integer seconds = values.get("totalSeconds");
+                tt.setText(minutes.toString() + ":" + String.format("%02d", seconds));
+            }
+
+            if (values.containsKey("elapsedMinutes") && values.containsKey("elapsedSeconds")) {
+                Integer minutes = values.get("elapsedMinutes");
+                Integer seconds = values.get("elapsedSeconds");
+                te.setText(minutes.toString() + ":" + String.format("%02d", seconds));
+            }
+        }
+    }
+
+    private void calculateSongTimes()
+    {
+        try{
+            while(true) {
+                final HashMap<String, Integer> songVals = new HashMap<>();
+                Integer start, end, position;
+
+                synchronized (lock) {
+                    if(songTimes.containsKey("start"))
+                        start = songTimes.get("start");
+                    else
+                        start = 0;
+
+                    if(songTimes.containsKey("end"))
+                        end = songTimes.get("end");
+                    else
+                        end = 0;
+
+                    if(songTimes.containsKey("position"))
+                        position = songTimes.get("position");
+                    else
+                        position = 0;
+
+                    if(songChanged){
+                        songChanged = false;
+                        position = position * 1000;
+                        Integer length = end - start;
+                        Integer totalMinutes = length / 60;
+                        Integer totalSeconds = length % 60;
+
+                        songVals.put("length", length * 1000);
+                        songVals.put("totalMinutes", totalMinutes);
+                        songVals.put("totalSeconds", totalSeconds);
+                    }
+                    else{
+                        position += UPDATE_INTERVAL;
+                        songTimes.put("position", position);
+                    }
+                }
+
+                songVals.put("position", position);
+                songVals.put("elapsedMinutes", (position / 1000) / 60);
+                songVals.put("elapsedSeconds", (position / 1000) % 60);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateSongProgress(songVals);
+                    }
+                });
+
+                Thread.sleep(UPDATE_INTERVAL);
+            }
+        }
+        catch(InterruptedException ex) {}
     }
 
     public void togglePlayPause(View v) {
