@@ -51,7 +51,6 @@
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
                 android:layout_width="240dp"
-                android:textAlignment="center"
                 android:layout_marginTop="6dp" />
 
             <TextView
