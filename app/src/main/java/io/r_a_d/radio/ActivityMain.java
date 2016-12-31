@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -153,6 +154,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void updateUI(){
         try {
             View now_playing = viewPager.getChildAt(0);
+            TextView lp4 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp4);
+            TextView lp3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp3);
+            TextView lp2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp2);
+            TextView lp1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp1);
+            TextView lp0 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp0);
+            TextView q1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q1);
+            TextView q2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q2);
+            TextView q3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q3);
+            TextView q4 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q4);
+            TextView q5 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q5);
             JSONObject djdata = new JSONObject(current_ui_json.getString("dj"));
             JSONArray queue_list = current_ui_json.getJSONArray("queue");
             JSONArray last_played_list = current_ui_json.getJSONArray("lp");
@@ -190,6 +201,26 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 //pb.setMax(song_length);
             }
 
+                lp0.setText(last_played_list.getJSONObject(0).getString("meta"));
+                lp1.setText(last_played_list.getJSONObject(1).getString("meta"));
+                lp2.setText(last_played_list.getJSONObject(2).getString("meta"));
+                lp3.setText(last_played_list.getJSONObject(3).getString("meta"));
+                lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
+                if(current_ui_json.getBoolean("isafkstream")) {
+                    q1.setText(queue_list.getJSONObject(0).getString("meta"));
+                    q2.setText(queue_list.getJSONObject(1).getString("meta"));
+                    q3.setText(queue_list.getJSONObject(2).getString("meta"));
+                    q4.setText(queue_list.getJSONObject(3).getString("meta"));
+                    q5.setText(queue_list.getJSONObject(4).getString("meta"));
+                } else {
+                    q1.setText("No Queue");
+                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
+                    q2.setText("");
+                    q3.setText("");
+                    q4.setText("");
+                    q5.setText("");
+                }
+
             if (!np.isSelected()) {
                 np.setMarqueeRepeatLimit(-1);
                 np.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -206,8 +237,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 dj_name.setText(djname);
             //dj_name.setTextColor(djhex);
 
-            if(!nextsong.getText().toString().equals(ns))
-                nextsong.setText(ns);
+            if(!nextsong.getText().toString().equals(ns)) {
+                if (current_ui_json.getBoolean("isafkstream")) {
+                    nextsong.setText(ns);
+                } else {
+                    nextsong.setText("No Queue");
+                    nextsong.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
+                }
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -61,10 +61,10 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tab_dots"
                     app:tabIndicatorHeight="0dp"
-                    app:tabGravity="center"
                     app:tabBackground="@drawable/tab_selector"
                     android:layout_marginLeft="20dp"
-                    android:layout_width="50dp" />
+                    android:layout_width="50dp"
+                    android:paddingBottom="2dp" />
 
             </LinearLayout>
         </LinearLayout>
