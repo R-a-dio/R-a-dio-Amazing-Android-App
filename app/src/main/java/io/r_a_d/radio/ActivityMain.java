@@ -1,18 +1,19 @@
 package io.r_a_d.radio;
 
 import android.content.Intent;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,9 +35,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
@@ -47,8 +46,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private final Integer UPDATE_INTERVAL = 500;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this);
+    private DJImageTask djimageTask = new DJImageTask(this);
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
     private String api_url = "https://r-a-d.io/api";
+    private String djimage_api = "https://r-a-d.io/api/dj-image/";
+    private String current_dj_image;
     public JSONObject current_ui_json;
     private Thread songCalcThread;
     private final Object lock = new Object();
@@ -204,6 +206,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             TextView nextsong = (TextView)now_playing.findViewById(R.id.nextsong);
             String ns = queue_list.getJSONObject(0).getString("meta");
 
+            String djimgid = djdata.getString("djimage");
+
+            if(current_dj_image != djimgid) {
+                current_dj_image = djimgid;
+                scrapeDJImage(djimage_api + djimgid);
+            }
+
             if(!threadurl.isEmpty()) {
                 threadtxt.setText("Thread Up!");
                 threadtxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rblue, null));
@@ -292,6 +301,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void setUIJSON(String jsonString) throws JSONException {
         current_ui_json = new JSONObject(new JSONObject(jsonString).getString("main"));
         updateUI();
+    }
+
+    public void scrapeDJImage(String urlToScrape){
+        djimageTask.cancel(false);
+        djimageTask = new DJImageTask(this);
+        djimageTask.execute(urlToScrape);
+    }
+
+    public void setDJImage(RoundedBitmapDrawable djimage) {
+        ImageView djavatar = (ImageView)viewPager.getChildAt(0).findViewById(R.id.dj_avatar);
+        djavatar.setImageDrawable(djimage);
     }
 
     private void updateSongProgress(HashMap<String, Integer> values)
