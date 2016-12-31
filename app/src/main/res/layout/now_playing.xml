@@ -17,65 +17,6 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:id="@+id/dj_name_icon"
-        android:layout_gravity="top|fill_horizontal"
-        android:layout_height="140dp">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="85dp"
-            android:background="@color/colorPrimaryDark"
-            android:layout_marginTop="38dp"
-            android:id="@+id/dj_base">
-
-            <TextView
-                android:text="You're listening to:"
-                android:layout_height="wrap_content"
-                android:id="@+id/ylt"
-                android:textColor="@color/dark"
-                android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:layout_width="240dp"
-                android:layout_marginTop="4dp"
-                android:textAlignment="center"
-                android:textAllCaps="false" />
-
-            <TextView
-                android:text="Hanyuu-sama"
-                android:layout_width="240dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dj_name"
-                android:textSize="24sp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/orange"
-                android:textAlignment="center" />
-
-            <TextView
-                android:text="Listeners: idklol"
-                android:layout_height="23dp"
-                android:id="@+id/listeners"
-                android:layout_width="240dp"
-                android:textAlignment="center"
-                android:textSize="12sp"
-                android:textColor="@color/dark"
-                android:gravity="center_vertical" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="129dp"
-            android:layout_height="110dp"
-            app:srcCompat="@drawable/dj_image"
-            android:id="@+id/dj_avatar"
-            android:layout_gravity="right"
-            android:layout_marginTop="26dp"
-            android:scaleType="fitCenter" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
         android:layout_gravity="bottom|fill_horizontal"
         android:layout_height="188dp"
         android:id="@+id/now_playing_info">
@@ -169,5 +110,66 @@
         android:layout_height="167dp"
         android:layout_marginBottom="20dp"
         android:onClick="togglePlayPause" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/dj_name_icon"
+        android:layout_gravity="top|fill_horizontal"
+        android:layout_height="140dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:background="@color/colorPrimaryDark"
+            android:layout_marginTop="38dp"
+            android:id="@+id/dj_base">
+
+            <TextView
+                android:text="You're listening to:"
+                android:layout_height="wrap_content"
+                android:id="@+id/ylt"
+                android:textColor="@color/dark"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:layout_width="240dp"
+                android:layout_marginTop="4dp"
+                android:textAlignment="center"
+                android:textAllCaps="false" />
+
+            <TextView
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/dj_name"
+                android:textSize="24sp"
+                android:textStyle="normal|bold"
+                android:textColor="@color/orange"
+                android:textAlignment="center"
+                android:singleLine="true"
+                android:text="..." />
+
+            <TextView
+                android:text="Listeners: idklol"
+                android:layout_height="23dp"
+                android:id="@+id/listeners"
+                android:layout_width="240dp"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                android:textColor="@color/dark"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="129dp"
+            android:layout_height="110dp"
+            android:id="@+id/dj_avatar"
+            android:layout_gravity="right"
+            android:layout_marginTop="26dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="dj_images go here"
+            app:srcCompat="@drawable/dj_image" />
+
+    </FrameLayout>
 
 </FrameLayout>
