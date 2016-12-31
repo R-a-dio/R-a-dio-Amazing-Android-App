@@ -8,29 +8,28 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="69dp"
         android:id="@+id/thread_container"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_height="60dp">
 
 
         <TextView
             android:text="No Thread Up"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/thread"
             android:textColor="@color/dark"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="normal|bold"
             android:paddingLeft="10dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_height="60dp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
         android:background="@android:color/black"
-         />
+        android:layout_height="5dp" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -127,6 +126,12 @@
             android:textColor="@color/whited"
             android:gravity="center_vertical" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@android:color/black"
+            />
+
 
         <TextView
             android:text="Queue"
@@ -137,7 +142,7 @@
             android:paddingLeft="10dp"
             android:gravity="top"
             android:layout_height="30dp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:text="P"
@@ -147,7 +152,13 @@
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
             android:textSize="18sp"
-            android:gravity="top" />
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:id="@+id/hide_view4" />
 
         <TextView
             android:text="L"
@@ -157,7 +168,14 @@
             android:paddingLeft="10dp"
             android:textSize="18sp"
             android:textColor="@color/whited2"
-            android:gravity="top" />
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:id="@+id/hide_view3" />
+
 
         <TextView
             android:text="E"
@@ -167,7 +185,13 @@
             android:id="@+id/q3"
             android:textColor="@color/whited3"
             android:textSize="18sp"
-            android:gravity="top" />
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:id="@+id/hide_view2" />
 
         <TextView
             android:text="S"
@@ -177,7 +201,13 @@
             android:textSize="18sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited4"
-            android:gravity="top" />
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:id="@+id/hide_view1" />
 
         <TextView
             android:text="E"
