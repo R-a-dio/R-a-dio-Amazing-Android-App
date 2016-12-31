@@ -105,7 +105,8 @@
 
             tools:progress="32"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp" />
+            android:paddingRight="15dp"
+            android:progressTint="@color/rblue" />
 
         <TextView
             android:text="00:32"
