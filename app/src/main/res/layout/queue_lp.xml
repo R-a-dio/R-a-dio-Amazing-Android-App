@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:id="@+id/qlp_storage">
 
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -23,8 +22,15 @@
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="normal|bold"
+            android:paddingLeft="10dp"
             android:gravity="center_vertical" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black"
+         />
 
     <LinearLayout
         android:orientation="vertical"
@@ -40,71 +46,87 @@
             android:textColor="@color/orange"
             android:textStyle="normal|bold"
             android:layout_weight="0.07"
-            android:gravity="bottom"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:paddingLeft="10dp"
+            android:gravity="center_vertical"
+            android:paddingBottom="2dp" />
+
 
         <TextView
-            android:text="pellet222 - sonic racing"
+            android:text="W"
             android:layout_width="match_parent"
             android:id="@+id/lp4"
-            android:textSize="12sp"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited5"
             android:layout_weight="0.06"
-            android:layout_height="wrap_content"
-            android:gravity="bottom" />
+            android:layout_height="40dp"
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
         <TextView
-            android:text="Kilim - sonic racing (cover)"
+            android:text="A"
             android:layout_width="match_parent"
             android:id="@+id/lp3"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited4"
-            android:layout_height="wrap_content"
-            android:gravity="bottom" />
+            android:layout_height="40dp"
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
         <TextView
-            android:text="Vin - sweden racer"
+            android:text="I"
             android:layout_width="match_parent"
             android:id="@+id/lp2"
+            android:paddingLeft="10dp"
             android:textSize="16sp"
             android:textColor="@color/whited3"
-            android:layout_height="wrap_content"
-            android:gravity="bottom" />
+            android:layout_height="40dp"
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
         <TextView
-            android:text="Ghostlyy - video games racer"
+            android:text="T"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/lp1"
-            android:textSize="18sp"
+            android:paddingLeft="10dp"
+            android:textSize="16sp"
             android:textColor="@color/whited2"
-            android:gravity="bottom" />
+            android:gravity="center_vertical" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            />
 
         <TextView
-            android:text="Wessie - vin's cock racer"
+            android:text="!"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/lp0"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited"
-            android:gravity="bottom" />
+            android:gravity="center_vertical" />
 
-        <TextView
-            android:text="Now Playing"
-            android:layout_width="match_parent"
-            android:id="@+id/np_label"
-            android:textSize="14sp"
-            android:textColor="@color/orange"
-            android:gravity="bottom"
-            android:layout_height="50dp"
-            android:paddingBottom="5dp" />
-
-        <TextView
-            android:text="Kilim - Sakura Field Trip (jponry)"
-            android:layout_width="match_parent"
-            android:id="@+id/np_"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:layout_height="wrap_content" />
 
         <TextView
             android:text="Queue"
@@ -112,52 +134,59 @@
             android:id="@+id/q_label"
             android:textColor="@color/orange"
             android:textStyle="normal|bold"
+            android:paddingLeft="10dp"
             android:gravity="top"
             android:layout_height="30dp"
             android:layout_marginTop="20dp" />
 
         <TextView
-            android:text="Nintendo - I'm a dump jap lol"
+            android:text="P"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/q1"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:gravity="top" />
 
         <TextView
-            android:text="2B - Platinum Games Ass"
+            android:text="L"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/q2"
+            android:paddingLeft="10dp"
             android:textSize="18sp"
             android:textColor="@color/whited2"
             android:gravity="top" />
 
         <TextView
-            android:text="Wessie - I insult people for no reason"
+            android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
             android:id="@+id/q3"
             android:textColor="@color/whited3"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:gravity="top" />
 
         <TextView
-            android:text="Kilim - Stronger than U"
+            android:text="S"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/q4"
+            android:textSize="18sp"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited4"
             android:gravity="top" />
 
         <TextView
-            android:text="exci - gm"
+            android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:id="@+id/q5"
+            android:paddingLeft="10dp"
             android:textColor="@color/whited5"
-            android:textSize="12sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

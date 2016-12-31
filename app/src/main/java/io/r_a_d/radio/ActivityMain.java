@@ -138,7 +138,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             TextView lp2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp2);
             TextView lp1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp1);
             TextView lp0 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp0);
-            TextView np_ = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.np_);
             TextView q1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q1);
             TextView q2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q2);
             TextView q3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q3);
@@ -182,7 +181,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 lp2.setText(last_played_list.getJSONObject(2).getString("meta"));
                 lp3.setText(last_played_list.getJSONObject(3).getString("meta"));
                 lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
-                np_.setText(tags);
                 if(current_ui_json.getBoolean("isafkstream")) {
                     q1.setText(queue_list.getJSONObject(0).getString("meta"));
                     q2.setText(queue_list.getJSONObject(1).getString("meta"));
