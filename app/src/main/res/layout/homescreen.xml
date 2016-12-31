@@ -36,8 +36,8 @@
                 android:cropToPadding="false"
                 android:layout_width="51dp"
                 android:layout_gravity="center"
-                android:paddingLeft="18dp"
-                android:contentDescription="r/a/dio's kigo" />
+                android:contentDescription="r/a/dio's kigo"
+                android:paddingStart="18dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -53,9 +53,9 @@
                     android:layout_height="match_parent"
                     android:id="@+id/radio"
                     android:textSize="22sp"
-                    android:paddingLeft="12dp"
                     android:paddingTop="8dp"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp" />
 
                 <android.support.design.widget.TabLayout
                     android:layout_height="wrap_content"
