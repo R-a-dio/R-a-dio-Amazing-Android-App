@@ -97,7 +97,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/left_drawer"
-        android:layout_width="300dp"
+        android:layout_width="325dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"

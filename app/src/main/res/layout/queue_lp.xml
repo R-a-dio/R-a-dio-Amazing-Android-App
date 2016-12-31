@@ -61,14 +61,14 @@
             android:paddingLeft="10dp"
             android:textColor="@color/whited5"
             android:layout_weight="0.06"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            />
+            android:layout_width="250dp"
+            android:layout_gravity="center" />
 
         <TextView
             android:text="A"
@@ -77,14 +77,14 @@
             android:textSize="16sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited4"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            />
+            android:layout_gravity="center" />
 
         <TextView
             android:text="I"
@@ -93,19 +93,19 @@
             android:paddingLeft="10dp"
             android:textSize="16sp"
             android:textColor="@color/whited3"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            />
+            android:layout_gravity="center" />
 
         <TextView
             android:text="T"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/lp1"
             android:paddingLeft="10dp"
             android:textSize="16sp"
@@ -113,15 +113,15 @@
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            />
+            android:layout_gravity="center" />
 
         <TextView
             android:text="!"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/lp0"
             android:textSize="16sp"
             android:paddingLeft="10dp"
@@ -130,9 +130,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="5dp"
             android:background="@android:color/black"
-            />
+            android:layout_height="2dp" />
 
 
         <TextView
@@ -149,7 +148,7 @@
         <TextView
             android:text="P"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/q1"
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
@@ -157,15 +156,16 @@
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:id="@+id/hide_view4" />
+            android:id="@+id/hide_view4"
+            android:layout_gravity="center" />
 
         <TextView
             android:text="L"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/q2"
             android:paddingLeft="10dp"
             android:textSize="18sp"
@@ -173,16 +173,17 @@
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:id="@+id/hide_view3" />
+            android:id="@+id/hide_view3"
+            android:layout_gravity="center" />
 
 
         <TextView
             android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:paddingLeft="10dp"
             android:id="@+id/q3"
             android:textColor="@color/whited3"
@@ -190,15 +191,16 @@
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:id="@+id/hide_view2" />
+            android:id="@+id/hide_view2"
+            android:layout_gravity="center" />
 
         <TextView
             android:text="S"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/q4"
             android:textSize="18sp"
             android:paddingLeft="10dp"
@@ -206,19 +208,21 @@
             android:gravity="center_vertical" />
 
         <View
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="1dp"
             android:background="@android:color/darker_gray"
-            android:id="@+id/hide_view1" />
+            android:id="@+id/hide_view1"
+            android:layout_gravity="center" />
 
         <TextView
             android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:id="@+id/q5"
             android:paddingLeft="10dp"
             android:textColor="@color/whited5"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:gravity="center_vertical" />
 
     </LinearLayout>
 
