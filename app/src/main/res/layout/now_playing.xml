@@ -69,7 +69,8 @@
             app:srcCompat="@drawable/dj_image"
             android:id="@+id/dj_avatar"
             android:layout_gravity="right"
-            android:layout_marginTop="26dp" />
+            android:layout_marginTop="26dp"
+            android:scaleType="fitCenter" />
 
     </FrameLayout>
 
