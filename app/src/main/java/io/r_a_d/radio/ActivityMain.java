@@ -1,5 +1,6 @@
 package io.r_a_d.radio;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -115,6 +117,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void onPageSelected(int position) {
         TextView title_text = (TextView)findViewById(R.id.radio);
         View page = viewPager.getChildAt(position);
+
+        View x = getCurrentFocus();
+        if(x != null)
+        {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(x.getWindowToken(), 0);
+        }
 
         int pageID = page.getId();
 
