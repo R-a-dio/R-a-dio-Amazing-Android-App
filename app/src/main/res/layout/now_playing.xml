@@ -51,7 +51,8 @@
                 android:textSize="18sp"
                 android:textStyle="normal|bold"
                 android:layout_width="240dp"
-                android:layout_marginTop="6dp" />
+                android:layout_marginTop="6dp"
+                android:textAlignment="center" />
 
             <TextView
                 android:text="Hanyuu-sama"
