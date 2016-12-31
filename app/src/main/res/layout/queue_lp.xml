@@ -48,7 +48,8 @@
             android:layout_height="30dp"
             android:paddingLeft="10dp"
             android:gravity="center_vertical"
-            android:paddingBottom="2dp" />
+            android:paddingBottom="2dp"
+            android:textAllCaps="false" />
 
 
         <TextView
