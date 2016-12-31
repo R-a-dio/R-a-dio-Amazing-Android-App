@@ -1,5 +1,6 @@
 package io.r_a_d.radio;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -151,6 +152,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         sep.prepare(audioSource);
     }
 
+    public void openThread(View v) {
+        try {
+            if (current_ui_json != null) {
+                String threadurl = current_ui_json.getString("thread");
+                if(!threadurl.isEmpty()) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(threadurl)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void updateUI(){
         try {
             View now_playing = viewPager.getChildAt(0);
@@ -164,12 +176,15 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             TextView q3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q3);
             TextView q4 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q4);
             TextView q5 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q5);
+            TextView threadtxt = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.thread);
             JSONObject djdata = new JSONObject(current_ui_json.getString("dj"));
             JSONArray queue_list = current_ui_json.getJSONArray("queue");
             JSONArray last_played_list = current_ui_json.getJSONArray("lp");
 
             TextView np = (TextView)now_playing.findViewById(R.id.tags);
             String tags = current_ui_json.getString("np");
+
+            String threadurl = current_ui_json.getString("thread");
 
 
             TextView ls = (TextView)now_playing.findViewById(R.id.listeners);
@@ -188,6 +203,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             TextView nextsong = (TextView)now_playing.findViewById(R.id.nextsong);
             String ns = queue_list.getJSONObject(0).getString("meta");
+
+            if(!threadurl.isEmpty()) {
+                threadtxt.setText("Thread Up!");
+                threadtxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rblue, null));
+            } else {
+                threadtxt.setText("No Thread Up");
+                threadtxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
+            }
 
             if(!np.getText().toString().equals(tags)) {
                 np.setText(tags);
@@ -208,10 +231,15 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
                 if(current_ui_json.getBoolean("isafkstream")) {
                     q1.setText(queue_list.getJSONObject(0).getString("meta"));
+                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited, null));
                     q2.setText(queue_list.getJSONObject(1).getString("meta"));
                     q3.setText(queue_list.getJSONObject(2).getString("meta"));
                     q4.setText(queue_list.getJSONObject(3).getString("meta"));
                     q5.setText(queue_list.getJSONObject(4).getString("meta"));
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.VISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.VISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.VISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.VISIBLE);
                 } else {
                     q1.setText("No Queue");
                     q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
@@ -219,6 +247,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     q3.setText("");
                     q4.setText("");
                     q5.setText("");
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.INVISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.INVISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.INVISIBLE);
+                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.INVISIBLE);
                 }
 
             if (!np.isSelected()) {

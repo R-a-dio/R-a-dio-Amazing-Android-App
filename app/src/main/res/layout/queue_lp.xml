@@ -23,7 +23,8 @@
             android:textStyle="normal|bold"
             android:paddingLeft="10dp"
             android:gravity="center_vertical"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:onClick="openThread" />
     </LinearLayout>
 
     <View
