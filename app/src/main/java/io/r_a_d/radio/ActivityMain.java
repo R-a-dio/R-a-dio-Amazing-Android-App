@@ -195,7 +195,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 {
                     songTimes.put("start", song_start);
                     songTimes.put("end", song_end);
-                    songTimes.put("position", song_length_position);
+                    songTimes.put("position", song_length_position * 1000);
                     songChanged = true;
                 }
                 //pb.setMax(song_length);
