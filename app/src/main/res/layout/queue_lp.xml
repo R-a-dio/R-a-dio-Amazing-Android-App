@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:id="@+id/thread_container"
         android:weightSum="1"
-        android:layout_height="60dp">
+        android:layout_height="56dp">
 
 
         <TextView
@@ -21,10 +21,9 @@
             android:textAlignment="center"
             android:textSize="24sp"
             android:textStyle="normal|bold"
-            android:paddingLeft="10dp"
             android:gravity="center_vertical"
-            android:layout_height="60dp"
-            android:onClick="openThread" />
+            android:onClick="openThread"
+            android:layout_height="56dp" />
     </LinearLayout>
 
     <View
