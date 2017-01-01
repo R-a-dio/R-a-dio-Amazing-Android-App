@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,7 +101,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         scrapeNews(news_api_url);
         scrapeJSON(api_url);
-        setupMediaPlayer();
+        createMediaPlayer();
 
         handler.postDelayed(new Runnable(){
             public void run(){
@@ -168,11 +169,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         return;
     }
 
-    public void setupMediaPlayer() {
+    public void createMediaPlayer() {
         TrackSelector tSelector = new DefaultTrackSelector();
         LoadControl lc = new DefaultLoadControl();
         sep = ExoPlayerFactory.newSimpleInstance(this, tSelector, lc);
+    }
 
+    public void setupMediaPlayer() {
         DataSource.Factory dsf = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "R/a/dio-Android-App"));
         ExtractorsFactory extractors = new DefaultExtractorsFactory();
@@ -235,7 +238,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             String djimgid = djdata.getString("djimage");
 
-            if(current_dj_image != djimgid) {
+            if(current_dj_image == null || !current_dj_image.equals(djimgid)) {
                 current_dj_image = djimgid;
                 scrapeDJImage(djimage_api + djimgid);
             }
@@ -470,13 +473,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(!playing){
             img.setImageResource(R.drawable.pause_small);
             playing = true;
-            sep.seekToDefaultPosition();
+            setupMediaPlayer();
             sep.setPlayWhenReady(playing);
             acquireWakeLocks();
         } else {
             img.setImageResource(R.drawable.arrow_small);
             playing = false;
-            sep.setPlayWhenReady(playing);
+            sep.stop();
             releaseWakeLocks();
         }
     }
