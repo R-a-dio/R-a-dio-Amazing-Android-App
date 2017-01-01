@@ -44,10 +44,12 @@
                 android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/news0"
+                android:id="@+id/news1"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:clickable="false"
+                android:autoLink="web" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -62,39 +64,6 @@
 
                 <TextView
                     android:text="R/a/dio Festivities and Stream(s)"
-                    android:id="@+id/news_title1"
-                    android:paddingLeft="15dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/orange"
-                    android:textStyle="normal|bold"
-                    android:textSize="18sp"
-                    android:layout_width="340dp"
-                    android:layout_height="60dp" />
-
-            </FrameLayout>
-
-            <TextView
-                android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/news1"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:textColor="@color/white" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/newsbanner3">
-
-                <ImageView
-                    app:srcCompat="@drawable/news_bg"
-                    android:id="@+id/imageView"
-                    android:layout_width="340dp"
-                    android:layout_height="60dp" />
-
-                <TextView
-                    android:text="SANIC_HEGEHOD Returns!"
                     android:id="@+id/news_title2"
                     android:paddingLeft="15dp"
                     android:gravity="center_vertical"
@@ -113,7 +82,44 @@
                 android:id="@+id/news2"
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:clickable="false"
+                android:autoLink="web" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/newsbanner3">
+
+                <ImageView
+                    app:srcCompat="@drawable/news_bg"
+                    android:id="@+id/imageView"
+                    android:layout_width="340dp"
+                    android:layout_height="60dp" />
+
+                <TextView
+                    android:text="SANIC_HEGEHOD Returns!"
+                    android:id="@+id/news_title3"
+                    android:paddingLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/orange"
+                    android:textStyle="normal|bold"
+                    android:textSize="18sp"
+                    android:layout_width="340dp"
+                    android:layout_height="60dp" />
+
+            </FrameLayout>
+
+            <TextView
+                android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/news3"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:textColor="@color/white"
+                android:clickable="false"
+                android:autoLink="web" />
 
         </LinearLayout>
     </ScrollView>

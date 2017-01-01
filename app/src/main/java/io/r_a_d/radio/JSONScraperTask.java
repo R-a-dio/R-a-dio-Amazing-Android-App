@@ -14,10 +14,12 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
 
     private URL api_url_scraper;
     private ActivityMain activity;
+    private Integer uitocall;
 
-    public JSONScraperTask(ActivityMain activity)
+    public JSONScraperTask(ActivityMain activity, Integer methodtocall)
     {
         this.activity = activity;
+        this.uitocall = methodtocall;
     }
 
     @Override
@@ -44,7 +46,14 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String json) {
         try {
-            activity.setUIJSON(json);
+            switch (uitocall){
+                case 0:
+                    activity.setUIJSON(json);
+                    break;
+                case 1:
+                    activity.setNewsUI(json);
+                    break;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

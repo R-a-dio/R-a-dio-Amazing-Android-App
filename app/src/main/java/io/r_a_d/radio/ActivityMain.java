@@ -11,6 +11,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -47,11 +48,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private Integer api_update_delay = 10000;
     private final Integer UPDATE_INTERVAL = 500;
     private ViewPager viewPager;
-    private JSONScraperTask jsonTask = new JSONScraperTask(this);
+    private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
+    private Integer ui_page_to_update = 0;
     private DJImageTask djimageTask = new DJImageTask(this);
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
     private String api_url = "https://r-a-d.io/api";
     private String djimage_api = "https://r-a-d.io/api/dj-image/";
+    private String news_api_url = "https://r-a-d.io/api/news/";
     private String current_dj_image;
     public JSONObject current_ui_json;
     private Thread songCalcThread;
@@ -82,6 +85,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_dots);
         tabLayout.setupWithViewPager(viewPager, true);
 
+        scrapeNews(news_api_url);
         scrapeJSON(api_url);
         setupMediaPlayer();
 
@@ -303,13 +307,35 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     public void scrapeJSON(String urlToScrape){
         jsonTask.cancel(false);
-        jsonTask = new JSONScraperTask(this);
+        jsonTask = new JSONScraperTask(this, 0);
         jsonTask.execute(urlToScrape);
+    }
+
+    public void scrapeNews(String urlToScrape){
+        new JSONScraperTask(this, 1).execute(urlToScrape);
     }
 
     public void setUIJSON(String jsonString) throws JSONException {
         current_ui_json = new JSONObject(new JSONObject(jsonString).getString("main"));
         updateUI();
+    }
+
+    public void setNewsUI(String jsonString) throws JSONException {
+        JSONArray newsjson = new JSONArray(jsonString);
+        View news_view = viewPager.getChildAt(2);
+        TextView newst1 = (TextView)news_view.findViewById(R.id.news_title1);
+        TextView newst2 = (TextView)news_view.findViewById(R.id.news_title2);
+        TextView newst3 = (TextView)news_view.findViewById(R.id.news_title3);
+        newst1.setText(newsjson.getJSONObject(0).getString("title"));
+        newst2.setText(newsjson.getJSONObject(1).getString("title"));
+        newst3.setText(newsjson.getJSONObject(2).getString("title"));
+        TextView news1 = (TextView)news_view.findViewById(R.id.news1);
+        TextView news2 = (TextView)news_view.findViewById(R.id.news2);
+        TextView news3 = (TextView)news_view.findViewById(R.id.news3);
+        news1.setText(Html.fromHtml((newsjson.getJSONObject(0).getString("text"))));
+        news2.setText(Html.fromHtml((newsjson.getJSONObject(1).getString("text"))));
+        news3.setText(Html.fromHtml((newsjson.getJSONObject(2).getString("text"))));
+        //news_view.setText(Html.fromHtml("<h2>Title</h2><br><p>Description here</p>"));
     }
 
     public void scrapeDJImage(String urlToScrape){
