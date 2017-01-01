@@ -464,8 +464,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void releaseWakeLocks() {
-        wakeLock.release();
-        wifiLock.release();
+        if(wakeLock.isHeld()) wakeLock.release();
+        if(wifiLock.isHeld()) wifiLock.release();
     }
 
     public void togglePlayPause(View v) {
