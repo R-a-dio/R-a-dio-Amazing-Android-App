@@ -17,6 +17,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -184,7 +185,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         try {
             if (current_ui_json != null) {
                 String threadurl = current_ui_json.getString("thread");
-                if(!threadurl.isEmpty()) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(threadurl)));
+                if(!threadurl.isEmpty() && !current_ui_json.getBoolean("isafkstream") && URLUtil.isValidUrl(threadurl)) startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(threadurl)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -239,7 +240,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 scrapeDJImage(djimage_api + djimgid);
             }
 
-            if(!threadurl.isEmpty()) {
+            if(!threadurl.isEmpty() && !current_ui_json.getBoolean("isafkstream") && URLUtil.isValidUrl(threadurl)) {
                 threadtxt.setText("Thread Up!");
                 threadtxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.rblue, null));
             } else {
