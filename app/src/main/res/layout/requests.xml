@@ -11,17 +11,16 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:background="@color/colorPrimary"
-        android:id="@+id/queryholder"
-        android:layout_height="85dp"
-        android:layout_marginTop="35dp">
+        android:id="@+id/queryholder">
 
         <SearchView
             android:layout_height="match_parent"
             android:id="@+id/searchbar"
             style="@style/Base.Widget.AppCompat.SearchView.ActionBar"
             android:layout_gravity="end"
-            android:layout_width="match_parent" />
+            android:layout_width="250dp" />
     </LinearLayout>
 
     <LinearLayout
