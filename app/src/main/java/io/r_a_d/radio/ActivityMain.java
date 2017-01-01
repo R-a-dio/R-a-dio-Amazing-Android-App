@@ -3,9 +3,11 @@ package io.r_a_d.radio;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -61,6 +63,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private final Object lock = new Object();
     private HashMap<String, Integer> songTimes;
 
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
+    private WifiManager wifiManager;
+    private WifiManager.WifiLock wifiLock;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -73,6 +80,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KilimDankLock");
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
         setContentView(R.layout.homescreen);
         songTimes = new HashMap<>();
 
@@ -112,6 +124,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         sep.stop();
         sep.release();
         sep = null;
+        releaseWakeLocks();
 
         if(songCalcThread.isAlive() && !songCalcThread.isInterrupted())
             songCalcThread.interrupt();
@@ -441,6 +454,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         catch(InterruptedException ex) {}
     }
 
+    public void acquireWakeLocks() {
+        wakeLock.acquire();
+        wifiLock.acquire();
+    }
+
+    public void releaseWakeLocks() {
+        wakeLock.release();
+        wifiLock.release();
+    }
+
     public void togglePlayPause(View v) {
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
         if(!playing){
@@ -448,10 +471,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             playing = true;
             sep.seekToDefaultPosition();
             sep.setPlayWhenReady(playing);
+            acquireWakeLocks();
         } else {
             img.setImageResource(R.drawable.arrow_small);
             playing = false;
             sep.setPlayWhenReady(playing);
+            releaseWakeLocks();
         }
     }
 }
