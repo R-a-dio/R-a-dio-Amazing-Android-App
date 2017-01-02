@@ -9,19 +9,39 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:background="@color/colorPrimaryDark"
         android:id="@+id/queryholder"
         android:layout_height="85dp"
-        android:layout_marginTop="38dp">
+        android:layout_marginTop="38dp"
+        android:weightSum="1">
 
-        <SearchView
+        <EditText
+            android:layout_width="210dp"
             android:layout_height="match_parent"
-            android:id="@+id/searchbar"
-            style="@style/Base.Widget.AppCompat.SearchView.ActionBar"
-            android:layout_gravity="end"
-            android:layout_width="match_parent" />
+            android:text="Search Here..."
+            android:ems="10"
+            android:id="@+id/searchquery"
+            android:textColor="@color/dark"
+            android:textAlignment="textStart"
+            android:textSize="24sp"
+            android:layout_marginTop="30dp"
+            android:inputType="text"
+            android:autoText="false"
+            android:contextClickable="false"
+            android:editable="true"
+            android:background="@drawable/news_bg"
+            android:layout_weight="0.86"
+            android:paddingLeft="20dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:background="@android:drawable/ic_menu_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="26dp" />
+
     </LinearLayout>
 
     <LinearLayout
