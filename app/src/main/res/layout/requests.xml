@@ -30,7 +30,6 @@
             android:inputType="text"
             android:autoText="false"
             android:contextClickable="false"
-            android:editable="true"
             android:background="@drawable/news_bg"
             android:layout_weight="0.86"
             android:paddingLeft="20dp"
@@ -39,11 +38,12 @@
             android:enabled="true" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/searchButton"
             android:background="@android:drawable/ic_menu_search"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="26dp" />
+            android:layout_marginTop="26dp"
+            android:onClick="searchButtonClick"/>
 
     </LinearLayout>
 
@@ -56,14 +56,15 @@
         <TextView
             android:text="Use the bar to search!"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/textView4"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchMsg"
             android:textAlignment="center"
             android:gravity="center_vertical"
             android:textColor="@color/white" />
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/songListView"/>
     </LinearLayout>
 </LinearLayout>

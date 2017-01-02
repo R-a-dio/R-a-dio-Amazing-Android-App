@@ -24,6 +24,7 @@ import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -46,7 +48,9 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
@@ -145,11 +149,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         TextView title_text = (TextView)findViewById(R.id.radio);
         View page = viewPager.getChildAt(position);
 
-        View x = getCurrentFocus();
-        if(x != null)
+        View curView = getCurrentFocus();
+        if(curView != null)
         {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(x.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
         }
 
         int pageID = page.getId();
@@ -347,19 +351,79 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     public void clearFirstSearch(View v) {
         if(firstSearchClick) {
-            EditText edts = (EditText)v.findViewById(R.id.searchquery);
+            EditText edts = (EditText) v;
             edts.getText().clear();
             firstSearchClick = false;
+
             edts.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        //performSearch();
+                        performSearch(1);
                         return true;
                     }
                     return false;
                 }
             });
+        }
+    }
+
+    public void searchButtonClick(View searchButton){
+        performSearch(1);
+    }
+
+    private void performSearch(Integer pageNumber){
+        View curView = getCurrentFocus();
+        View requestView = viewPager.findViewById(R.id.requests_page);
+        EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
+        TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
+        String query = queryEditor.getText().toString().trim();
+        query = TextUtils.htmlEncode(query);
+
+        if(query.equals("")){
+            searchMsg.setVisibility(View.VISIBLE);
+            searchMsg.setText("You cannot search for nothing.");
+        }
+        else {
+            if (curView != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
+            }
+
+            String searchURL = String.format(SEARCH_API, query, pageNumber);
+            new JSONScraperTask(this, 2).execute(searchURL);
+        }
+    }
+
+    public void setSongList(String json) throws JSONException{
+        View requestView = viewPager.findViewById(R.id.requests_page);
+        TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
+        ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
+
+        try {
+            JSONArray songs = new JSONArray(new JSONObject(json).getString("data"));
+            ArrayList<Song> songList = new ArrayList<>();
+
+            for (int i = 0; i < songs.length(); i++){
+                JSONObject songObject = songs.getJSONObject(i);
+
+                if(songObject != null){
+                    String artist = songObject.getString("artist");
+                    String title = songObject.getString("title");
+                    Integer songID = songObject.getInt("id");
+                    boolean requestable = songObject.getBoolean("requestable");
+                    Song song = new Song(artist, title, songID, requestable);
+
+                    songList.add(song);
+                }
+            }
+
+            searchMsg.setVisibility(View.INVISIBLE);
+            songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, songList));
+        }
+        catch(JSONException ex){
+            searchMsg.setVisibility(View.VISIBLE);
+            searchMsg.setText("An error occurred while retrieving songs. Please try again.");
         }
     }
 
