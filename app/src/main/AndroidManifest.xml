@@ -15,17 +15,19 @@
         <activity
             android:name=".ActivityMain"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden">
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ActivitySlided"
-            android:label="@string/title_activity_slided"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <service
+            android:name="io.r_a_d.radio.RadioService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
