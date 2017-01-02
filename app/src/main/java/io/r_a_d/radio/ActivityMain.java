@@ -16,9 +16,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -49,6 +52,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     private boolean playing = false;
     private boolean songChanged = false;
+    private boolean firstSearchClick = true;
     private SimpleExoPlayer sep;
     private Integer api_update_delay = 10000;
     private final Integer UPDATE_INTERVAL = 500;
@@ -80,19 +84,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             }
         }
     };
-	
-	public class MyMainActivity extends AppCompatActivity {
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            // Make sure this is before calling super.onCreate
-            setTheme(R.style.AppTheme);
-            super.onCreate(savedInstanceState);
-            // ...
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
@@ -130,6 +125,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         });
         songCalcThread.setDaemon(true);
         songCalcThread.start();
+
     }
 
     @Override
@@ -347,6 +343,24 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void setUIJSON(String jsonString) throws JSONException {
         current_ui_json = new JSONObject(new JSONObject(jsonString).getString("main"));
         updateUI();
+    }
+
+    public void clearFirstSearch(View v) {
+        if(firstSearchClick) {
+            EditText edts = (EditText)v.findViewById(R.id.searchquery);
+            edts.getText().clear();
+            firstSearchClick = false;
+            edts.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        //performSearch();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
     }
 
     public void setNewsUI(String jsonString) throws JSONException {
