@@ -2,6 +2,7 @@ package io.r_a_d.radio;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -78,8 +79,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             }
         }
     };
-
-    public class MyMainActivity extends AppCompatActivity {
+	
+	public class MyMainActivity extends AppCompatActivity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             // Make sure this is before calling super.onCreate
@@ -478,7 +479,19 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(wifiLock.isHeld()) wifiLock.release();
     }
 
+    private boolean isDrawerVisible(View view) {
+
+        Rect scrollBounds = new Rect();
+        view.getHitRect(scrollBounds);
+        if (view.findViewById(R.id.drawer_layout).findViewById(R.id.left_drawer).getLocalVisibleRect(scrollBounds)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void togglePlayPause(View v) {
+        if(isDrawerVisible(findViewById(android.R.id.content))) return;
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
         if(!playing){
             img.setImageResource(R.drawable.pause_small);
