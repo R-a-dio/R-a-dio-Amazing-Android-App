@@ -60,6 +60,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private String api_url = "https://r-a-d.io/api";
     private String djimage_api = "https://r-a-d.io/api/dj-image/";
     private String news_api_url = "https://r-a-d.io/api/news/";
+    private final String SEARCH_API = "https://r-a-d.io/api/search/%1s?page=%2$d";
     private String current_dj_image;
     public JSONObject current_ui_json;
     private Thread songCalcThread;
