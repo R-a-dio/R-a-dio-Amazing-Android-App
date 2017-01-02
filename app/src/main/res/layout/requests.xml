@@ -11,10 +11,10 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorPrimaryDark"
         android:id="@+id/queryholder"
         android:layout_height="85dp"
-        android:layout_marginTop="45dp">
+        android:layout_marginTop="38dp">
 
         <SearchView
             android:layout_height="match_parent"

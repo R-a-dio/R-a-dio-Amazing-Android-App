@@ -79,6 +79,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         }
     };
 
+    public class MyMainActivity extends AppCompatActivity {
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            // Make sure this is before calling super.onCreate
+            setTheme(R.style.AppTheme);
+            super.onCreate(savedInstanceState);
+            // ...
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
