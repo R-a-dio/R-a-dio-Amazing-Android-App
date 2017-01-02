@@ -33,7 +33,10 @@
             android:editable="true"
             android:background="@drawable/news_bg"
             android:layout_weight="0.86"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="20dp"
+            android:onClick="clearFirstSearch"
+            android:imeOptions="actionSearch"
+            android:enabled="true" />
 
         <Button
             android:id="@+id/button2"
