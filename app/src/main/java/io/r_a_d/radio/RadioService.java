@@ -72,7 +72,6 @@ public class RadioService extends Service {
         } else {
             builder.setSmallIcon(R.drawable.actionbar_logo);
         }
-        builder.setSmallIcon(R.drawable.actionbar_logo);
         builder.setContentIntent(pendingIntent);
         notification = builder.build();
 
