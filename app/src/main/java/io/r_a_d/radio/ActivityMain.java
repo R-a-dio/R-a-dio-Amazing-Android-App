@@ -94,7 +94,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         });
         songCalcThread.setDaemon(true);
         songCalcThread.start();
-
     }
 
     @Override
@@ -277,6 +276,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     nextsong.setText("No Queue");
                     nextsong.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
                 }
+            }
+
+            // Fix for syncing play/pause button by taking advantage of the fact that this code gets
+            // called after the JSON gets scraped everything the main activity is instantiated.
+            // I don't know where else it could/should go.
+            ImageButton img = (ImageButton)now_playing.findViewById(R.id.play_pause);
+            if(PlayerState.CURRENTLY_PLAYING){
+                img.setImageResource(R.drawable.pause_small);
+            } else {
+                img.setImageResource(R.drawable.arrow_small);
             }
 
         } catch (JSONException e) {
@@ -464,14 +473,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void togglePlayPause(View v) {
         if(isDrawerVisible(findViewById(android.R.id.content))) return;
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
-        if(!playing){
+        if(!PlayerState.CURRENTLY_PLAYING){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
-            playing = true;
+            PlayerState.CURRENTLY_PLAYING = true;
         } else {
             img.setImageResource(R.drawable.arrow_small);
             pausePlayerService();
-            playing = false;
+            PlayerState.CURRENTLY_PLAYING = false;
         }
     }
 }
