@@ -7,25 +7,31 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/artistName"
+        android:id="@+id/songTitle"
         android:layout_toLeftOf="@+id/requestButton"
         android:padding="5dp"
+        android:textColor="@color/white"
         android:textSize="18sp"
-        android:textColor="@color/whited2" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="Title"
+        android:paddingStart="8dp"
+        android:gravity="bottom" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/artistName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/songTitle"
+        android:id="@+id/artistName"
         android:layout_toLeftOf="@+id/requestButton"
         android:padding="5dp"
-        android:textColor="@color/whited2"
-        android:textSize="18sp" />
+        android:textSize="14sp"
+        android:textColor="@color/whited"
+        android:layout_below="@+id/songTitle"
+        android:layout_alignParentStart="true"
+        android:text="Artist"
+        android:gravity="top"
+        android:paddingStart="10dp" />
 
     <Button
         android:text="@string/request_page"
@@ -34,5 +40,15 @@
         android:layout_alignParentRight="true"
         android:id="@+id/requestButton"
         android:layout_gravity="center_vertical"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="5dp" />
+
+    <View
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_width="250dp"
+        android:layout_below="@id/artistName"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
