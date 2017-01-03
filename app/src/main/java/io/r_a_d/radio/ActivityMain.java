@@ -74,6 +74,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private Thread songCalcThread;
     private final Object lock = new Object();
     private HashMap<String, Integer> songTimes;
+    private Requestor mRequestor;
 
     private PowerManager powerManager;
     private PowerManager.WakeLock wakeLock;
@@ -130,6 +131,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         songCalcThread.setDaemon(true);
         songCalcThread.start();
 
+        mRequestor = new Requestor(this);
     }
 
     @Override
@@ -378,7 +380,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
         TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
         String query = queryEditor.getText().toString().trim();
-        query = TextUtils.htmlEncode(query);
 
         if(query.equals("")){
             searchMsg.setVisibility(View.VISIBLE);
@@ -454,6 +455,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void setDJImage(RoundedBitmapDrawable djimage) {
         ImageView djavatar = (ImageView)viewPager.getChildAt(0).findViewById(R.id.dj_avatar);
         djavatar.setImageDrawable(djimage);
+    }
+
+    public void makeRequest(Integer songID){
+        mRequestor.Request(songID);
     }
 
     private void updateSongProgress(HashMap<String, Integer> values)

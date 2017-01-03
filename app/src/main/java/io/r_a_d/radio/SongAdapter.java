@@ -18,11 +18,13 @@ import java.util.ArrayList;
 public class SongAdapter extends ArrayAdapter<Song> {
     private Context mContext;
     private ArrayList<Song> mSongs;
+    private ActivityMain mActivity;
 
     public SongAdapter(Context context, int resource, ArrayList<Song> songs) {
         super(context, resource, songs);
         mContext = context;
         mSongs = songs;
+        mActivity = (ActivityMain)context;
     }
 
     @NonNull
@@ -44,6 +46,14 @@ public class SongAdapter extends ArrayAdapter<Song> {
         artistView.setText(song.getArtistName());
         requestButton.setEnabled(song.IsRequestable());
         requestButton.setHint(song.getSongID().toString());
+
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button b = (Button) v;
+                mActivity.makeRequest(Integer.parseInt(b.getHint().toString()));
+            }
+        });
 
         return view;
     }

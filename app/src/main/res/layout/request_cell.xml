@@ -35,19 +35,4 @@
         android:id="@+id/requestButton"
         android:layout_gravity="center_vertical"
         android:layout_centerInParent="true"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:id="@+id/songID"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:paddingTop="40dp"
-        android:id="@+id/reqButtonAlign"
-        android:visibility="invisible"/>
 </RelativeLayout>
