@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/maincontainer">
+            android:id="@+id/maincontainer"
+            android:layout_marginTop="14dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -41,7 +42,7 @@
             </FrameLayout>
 
             <TextView
-                android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
+                android:text="Loading,,,"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/news1"
@@ -49,7 +50,8 @@
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
                 android:clickable="false"
-                android:autoLink="web" />
+                android:autoLink="web"
+                android:paddingTop="10dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -76,7 +78,7 @@
             </FrameLayout>
 
             <TextView
-                android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
+                android:text="Loading..."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/news2"
@@ -84,7 +86,8 @@
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
                 android:clickable="false"
-                android:autoLink="web" />
+                android:autoLink="web"
+                android:paddingTop="10dp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -111,7 +114,7 @@
             </FrameLayout>
 
             <TextView
-                android:text="Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD Lorem Ibsun :DD "
+                android:text="Loading..."
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/news3"
@@ -119,7 +122,8 @@
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
                 android:clickable="false"
-                android:autoLink="web" />
+                android:autoLink="web"
+                android:paddingTop="10dp" />
 
         </LinearLayout>
     </ScrollView>

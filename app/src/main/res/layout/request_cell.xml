@@ -31,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:text="Artist"
         android:gravity="top"
-        android:paddingStart="10dp" />
+        android:paddingStart="12dp" />
 
     <Button
         android:text="@string/request_page"
@@ -49,6 +49,7 @@
         android:layout_width="250dp"
         android:layout_below="@id/artistName"
         android:layout_centerInParent="false"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="1dp" />
 
 </RelativeLayout>
