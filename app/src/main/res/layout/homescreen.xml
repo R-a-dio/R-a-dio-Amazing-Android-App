@@ -39,12 +39,12 @@
             <ImageView
                 app:srcCompat="@drawable/actionbar_logo"
                 android:id="@+id/logo_persistant"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:cropToPadding="false"
                 android:layout_width="43dp"
                 android:layout_gravity="center"
                 android:contentDescription="r/a/dio's kigo"
-                android:layout_marginStart="6dp" />
+                android:paddingStart="6dp" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -57,11 +57,12 @@
                     android:text="@string/app_name"
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:id="@+id/radio"
                     android:textSize="22sp"
-                    android:gravity="bottom"
-                    android:layout_marginStart="12dp"
-                    android:layout_height="36dp" />
+                    android:paddingTop="8dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="12dp" />
 
                 <android.support.design.widget.TabLayout
                     android:layout_height="wrap_content"
@@ -69,7 +70,8 @@
                     app:tabIndicatorHeight="0dp"
                     app:tabBackground="@drawable/tab_selector"
                     android:layout_marginLeft="20dp"
-                    android:layout_width="50dp" />
+                    android:layout_width="50dp"
+                    android:paddingBottom="2dp" />
 
             </LinearLayout>
         </LinearLayout>
