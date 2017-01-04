@@ -115,6 +115,14 @@ public class RadioService extends Service {
         releaseWakeLocks();
     }
 
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        if(!PlayerState.CURRENTLY_PLAYING) {
+            stopSelf();
+        }
+        super.onTaskRemoved(rootIntent);
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
