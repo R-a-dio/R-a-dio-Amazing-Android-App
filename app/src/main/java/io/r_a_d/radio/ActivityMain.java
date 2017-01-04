@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -27,44 +25,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
-    private boolean playing = false;
     private boolean songChanged = false;
     private boolean firstSearchClick = true;
-    private SimpleExoPlayer sep;
     private Integer api_update_delay = 10000;
     private final Integer UPDATE_INTERVAL = 500;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
-    private Integer ui_page_to_update = 0;
     private DJImageTask djimageTask = new DJImageTask(this);
-    private String radio_url = "https://stream.r-a-d.io/main.mp3";
     private String api_url = "https://r-a-d.io/api";
     private String djimage_api = "https://r-a-d.io/api/dj-image/";
     private String news_api_url = "https://r-a-d.io/api/news/";
@@ -76,10 +53,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
 
-    private PowerManager powerManager;
-    private PowerManager.WakeLock wakeLock;
-    private WifiManager wifiManager;
-    private WifiManager.WifiLock wifiLock;
+    private boolean playing = false;
 
     private Handler handler = new Handler(){
         @Override
@@ -94,11 +68,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-
-        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KilimDankLock");
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
         setContentView(R.layout.homescreen);
         songTimes = new HashMap<>();
 
@@ -113,7 +82,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         scrapeNews(news_api_url);
         scrapeJSON(api_url);
-        createMediaPlayer();
 
         handler.postDelayed(new Runnable(){
             public void run(){
@@ -130,20 +98,19 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         });
         songCalcThread.setDaemon(true);
         songCalcThread.start();
-
         mRequestor = new Requestor(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        sep.stop();
-        sep.release();
-        sep = null;
-        releaseWakeLocks();
 
         if(songCalcThread.isAlive() && !songCalcThread.isInterrupted())
             songCalcThread.interrupt();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -181,21 +148,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int state) {
         return;
-    }
-
-    public void createMediaPlayer() {
-        TrackSelector tSelector = new DefaultTrackSelector();
-        LoadControl lc = new DefaultLoadControl();
-        sep = ExoPlayerFactory.newSimpleInstance(this, tSelector, lc);
-    }
-
-    public void setupMediaPlayer() {
-        DataSource.Factory dsf = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "R/a/dio-Android-App"));
-        ExtractorsFactory extractors = new DefaultExtractorsFactory();
-        MediaSource audioSource = new ExtractorMediaSource(Uri.parse(radio_url), dsf, extractors, null, null);
-
-        sep.prepare(audioSource);
     }
 
     public void openThread(View v) {
@@ -329,6 +281,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     nextsong.setText("No Queue");
                     nextsong.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
                 }
+            }
+
+            // Fix for syncing play/pause button by taking advantage of the fact that this code gets
+            // called after the JSON gets scraped everything the main activity is instantiated.
+            // I don't know where else it could/should go.
+            ImageButton img = (ImageButton)now_playing.findViewById(R.id.play_pause);
+            if(PlayerState.CURRENTLY_PLAYING){
+                img.setImageResource(R.drawable.pause_small);
+            } else {
+                img.setImageResource(R.drawable.arrow_small);
             }
 
         } catch (JSONException e) {
@@ -553,16 +515,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         catch(InterruptedException ex) {}
     }
 
-    public void acquireWakeLocks() {
-        wakeLock.acquire();
-        wifiLock.acquire();
-    }
-
-    public void releaseWakeLocks() {
-        if(wakeLock.isHeld()) wakeLock.release();
-        if(wifiLock.isHeld()) wifiLock.release();
-    }
-
     private boolean isDrawerVisible(View view) {
 
         Rect scrollBounds = new Rect();
@@ -574,20 +526,29 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         }
     }
 
+    private void playPlayerService() {
+        Intent i = new Intent(this, RadioService.class);
+        i.putExtra("action", "io.r_a_d.radio.PLAY");
+        startService(i);
+    }
+
+    private void pausePlayerService() {
+        Intent i = new Intent(this, RadioService.class);
+        i.putExtra("action", "io.r_a_d.radio.PAUSE");
+        startService(i);
+    }
+
     public void togglePlayPause(View v) {
         if(isDrawerVisible(findViewById(android.R.id.content))) return;
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
-        if(!playing){
+        if(!PlayerState.CURRENTLY_PLAYING){
             img.setImageResource(R.drawable.pause_small);
-            playing = true;
-            setupMediaPlayer();
-            sep.setPlayWhenReady(playing);
-            acquireWakeLocks();
+            playPlayerService();
+            PlayerState.CURRENTLY_PLAYING = true;
         } else {
             img.setImageResource(R.drawable.arrow_small);
-            playing = false;
-            sep.stop();
-            releaseWakeLocks();
+            pausePlayerService();
+            PlayerState.CURRENTLY_PLAYING = false;
         }
     }
 }
