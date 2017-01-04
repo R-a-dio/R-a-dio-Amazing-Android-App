@@ -19,31 +19,33 @@
 
         <EditText
             android:layout_width="210dp"
-            android:layout_height="match_parent"
             android:text="Search Here..."
             android:ems="10"
             android:id="@+id/searchquery"
             android:textColor="@color/dark"
             android:textAlignment="textStart"
-            android:textSize="24sp"
-            android:layout_marginTop="30dp"
+            android:textSize="18sp"
             android:inputType="text"
             android:autoText="false"
             android:contextClickable="false"
-            android:editable="true"
-            android:background="@drawable/news_bg"
+            android:background="@android:drawable/divider_horizontal_textfield"
             android:layout_weight="0.86"
             android:paddingLeft="20dp"
             android:onClick="clearFirstSearch"
             android:imeOptions="actionSearch"
-            android:enabled="true" />
+            android:enabled="true"
+            android:layout_gravity="center_vertical"
+            android:layout_height="55dp"
+            android:layout_marginStart="15dp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/searchButton"
             android:background="@android:drawable/ic_menu_search"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="26dp" />
+            android:onClick="searchButtonClick"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
 
     </LinearLayout>
 
@@ -56,14 +58,17 @@
         <TextView
             android:text="Use the bar to search!"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/textView4"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchMsg"
             android:textAlignment="center"
             android:gravity="center_vertical"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:layout_marginTop="5dp" />
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:id="@+id/songListView"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 </LinearLayout>

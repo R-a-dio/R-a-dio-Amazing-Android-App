@@ -53,6 +53,9 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
                 case 1:
                     activity.setNewsUI(json);
                     break;
+                case 2:
+                    activity.setSongList(json);
+                    break;
             }
         } catch (JSONException e) {
             e.printStackTrace();
