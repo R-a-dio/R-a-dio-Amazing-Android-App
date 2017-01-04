@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
@@ -524,6 +525,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         } else {
             return false;
         }
+    }
+
+    public void openSideDrawer(View v) {
+        DrawerLayout dl = (DrawerLayout)findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
+        dl.openDrawer(dl.findViewById(R.id.left_drawer));
     }
 
     private void playPlayerService() {
