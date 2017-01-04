@@ -29,28 +29,9 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-<<<<<<< HEAD
-=======
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
-import java.util.ArrayList;
->>>>>>> refs/remotes/origin/master
 import java.util.HashMap;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
@@ -117,11 +98,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         });
         songCalcThread.setDaemon(true);
         songCalcThread.start();
-<<<<<<< HEAD
-=======
-
         mRequestor = new Requestor(this);
->>>>>>> refs/remotes/origin/master
     }
 
     @Override

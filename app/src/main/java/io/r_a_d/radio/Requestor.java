@@ -1,7 +1,6 @@
 package io.r_a_d.radio;
 
 import android.os.AsyncTask;
-import android.text.Html;
 import android.util.Xml;
 import android.widget.Toast;
 
@@ -12,16 +11,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.net.CookieStore;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
