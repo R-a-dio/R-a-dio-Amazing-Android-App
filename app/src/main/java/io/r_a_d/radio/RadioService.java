@@ -68,9 +68,9 @@ public class RadioService extends Service {
         builder.setContentText("Touch to return to app");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.lollipop_logo);
-            //builder.setColor(0xFFFF0000);
+            builder.setColor(0xFFDF4C3A);
         } else {
-            builder.setSmallIcon(R.drawable.actionbar_logo);
+            builder.setSmallIcon(R.drawable.normal_logo);
         }
         builder.setContentIntent(pendingIntent);
         notification = builder.build();
