@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
@@ -229,34 +230,34 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 //pb.setMax(song_length);
             }
 
-                lp0.setText(last_played_list.getJSONObject(0).getString("meta"));
-                lp1.setText(last_played_list.getJSONObject(1).getString("meta"));
-                lp2.setText(last_played_list.getJSONObject(2).getString("meta"));
-                lp3.setText(last_played_list.getJSONObject(3).getString("meta"));
-                lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
-                if(current_ui_json.getBoolean("isafkstream")) {
-                    q1.setText(queue_list.getJSONObject(0).getString("meta"));
-                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited, null));
-                    q2.setText(queue_list.getJSONObject(1).getString("meta"));
-                    q3.setText(queue_list.getJSONObject(2).getString("meta"));
-                    q4.setText(queue_list.getJSONObject(3).getString("meta"));
-                    q5.setText(queue_list.getJSONObject(4).getString("meta"));
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.VISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.VISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.VISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.VISIBLE);
-                } else {
-                    q1.setText("No Queue");
-                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
-                    q2.setText("");
-                    q3.setText("");
-                    q4.setText("");
-                    q5.setText("");
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.INVISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.INVISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.INVISIBLE);
-                    findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.INVISIBLE);
-                }
+            lp0.setText(last_played_list.getJSONObject(0).getString("meta"));
+            lp1.setText(last_played_list.getJSONObject(1).getString("meta"));
+            lp2.setText(last_played_list.getJSONObject(2).getString("meta"));
+            lp3.setText(last_played_list.getJSONObject(3).getString("meta"));
+            lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
+            if(current_ui_json.getBoolean("isafkstream")) {
+                q1.setText(queue_list.getJSONObject(0).getString("meta"));
+                q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited, null));
+                q2.setText(queue_list.getJSONObject(1).getString("meta"));
+                q3.setText(queue_list.getJSONObject(2).getString("meta"));
+                q4.setText(queue_list.getJSONObject(3).getString("meta"));
+                q5.setText(queue_list.getJSONObject(4).getString("meta"));
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.VISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.VISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.VISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.VISIBLE);
+            } else {
+                q1.setText("No Queue");
+                q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.dark, null));
+                q2.setText("");
+                q3.setText("");
+                q4.setText("");
+                q5.setText("");
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.INVISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.INVISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.INVISIBLE);
+                findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view4).setVisibility(View.INVISIBLE);
+            }
 
             if (!np.isSelected()) {
                 np.setMarqueeRepeatLimit(-1);
@@ -524,6 +525,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         } else {
             return false;
         }
+    }
+
+    public void openSideDrawer(View v) {
+        DrawerLayout dl = (DrawerLayout)findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
+        dl.openDrawer(dl.findViewById(R.id.left_drawer));
     }
 
     private void playPlayerService() {

@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -30,6 +32,8 @@ public class RadioService extends Service {
 
     private static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
     private static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
+    private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
+    private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
 
 
 
@@ -39,6 +43,18 @@ public class RadioService extends Service {
     private WifiManager.WifiLock wifiLock;
     private SimpleExoPlayer sep;
     private Notification notification;
+    private TelephonyManager mTelephonyManager;
+    private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
+        public void onCallStateChanged(int state, String incomingNumber) {
+            super.onCallStateChanged(state, incomingNumber);
+
+            if (state != TelephonyManager.CALL_STATE_IDLE) {
+                mutePlayer();
+            } else {
+                unmutePlayer();
+            }
+        }
+    };
 
 
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
@@ -72,10 +88,18 @@ public class RadioService extends Service {
         }
         builder.setContentIntent(pendingIntent);
         notification = builder.build();
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
 
     }
 
+    public void mutePlayer() {
+        sep.setVolume(0);
+    }
 
+    public void unmutePlayer() {
+        sep.setVolume((float) 1.0);
+    }
 
     public void setupMediaPlayer() {
         DataSource.Factory dsf = new DefaultDataSourceFactory(this,
@@ -99,6 +123,10 @@ public class RadioService extends Service {
             sep.stop();
             releaseWakeLocks();
             stopForeground(true);
+        } else if (intent.getStringExtra("action").equals(ACTION_MUTE)){
+            mutePlayer();
+        } else if (intent.getStringExtra("action").equals(ACTION_UNMUTE)){
+            unmutePlayer();
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -111,6 +139,7 @@ public class RadioService extends Service {
         sep.release();
         sep = null;
         releaseWakeLocks();
+        mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
     }
 
     @Override
