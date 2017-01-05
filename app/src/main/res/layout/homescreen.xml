@@ -34,8 +34,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_menu_sort_by_size"
                 android:id="@+id/drawerbutton"
-                android:layout_gravity="center_vertical"
-                android:onClick="openSideDrawer" />
+                android:layout_gravity="center_vertical" />
 
             <ImageView
                 app:srcCompat="@drawable/actionbar_logo"
@@ -45,8 +44,7 @@
                 android:layout_width="43dp"
                 android:layout_gravity="center"
                 android:contentDescription="r/a/dio's kigo"
-                android:paddingStart="6dp"
-                android:onClick="openSideDrawer" />
+                android:paddingStart="6dp" />
 
             <LinearLayout
                 android:orientation="vertical"
