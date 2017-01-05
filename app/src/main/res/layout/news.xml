@@ -29,7 +29,7 @@
                     android:layout_height="60dp" />
 
                 <TextView
-                    android:text="Some Updates"
+                    android:text="Loading..."
                     android:id="@+id/news_title1"
                     android:paddingLeft="15dp"
                     android:gravity="center_vertical"
@@ -65,7 +65,7 @@
                     android:layout_height="60dp" />
 
                 <TextView
-                    android:text="R/a/dio Festivities and Stream(s)"
+                    android:text="Loading..."
                     android:id="@+id/news_title2"
                     android:paddingLeft="15dp"
                     android:gravity="center_vertical"
@@ -101,7 +101,7 @@
                     android:layout_height="60dp" />
 
                 <TextView
-                    android:text="SANIC_HEGEHOD Returns!"
+                    android:text="Loading..."
                     android:id="@+id/news_title3"
                     android:paddingLeft="15dp"
                     android:gravity="center_vertical"

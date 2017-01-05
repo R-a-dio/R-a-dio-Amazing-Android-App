@@ -71,9 +71,9 @@
                     android:id="@+id/tab_dots"
                     app:tabIndicatorHeight="0dp"
                     app:tabBackground="@drawable/tab_selector"
-                    android:layout_marginLeft="20dp"
                     android:layout_width="50dp"
-                    android:paddingBottom="2dp" />
+                    android:paddingBottom="2dp"
+                    android:layout_marginStart="20dp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -107,7 +107,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/left_drawer"
-        android:layout_width="325dp"
+        android:layout_width="315dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"

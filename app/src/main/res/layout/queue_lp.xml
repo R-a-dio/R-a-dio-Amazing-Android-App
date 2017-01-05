@@ -12,7 +12,6 @@
         android:weightSum="1"
         android:layout_height="56dp">
 
-
         <TextView
             android:text="No Thread Up"
             android:layout_width="match_parent"
@@ -30,6 +29,10 @@
         android:layout_width="match_parent"
         android:background="@android:color/black"
         android:layout_height="5dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:orientation="vertical"
@@ -224,5 +227,5 @@
             android:gravity="center_vertical" />
 
     </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>
