@@ -64,7 +64,10 @@
             android:textColor="@color/whited5"
             android:layout_weight="0.06"
             android:layout_height="44dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_height="1dp"
@@ -80,7 +83,10 @@
             android:paddingLeft="10dp"
             android:textColor="@color/whited4"
             android:layout_height="44dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -96,7 +102,10 @@
             android:textSize="16sp"
             android:textColor="@color/whited3"
             android:layout_height="44dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -112,7 +121,10 @@
             android:paddingLeft="10dp"
             android:textSize="16sp"
             android:textColor="@color/whited2"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -128,7 +140,10 @@
             android:textSize="16sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="match_parent"
@@ -155,7 +170,10 @@
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
             android:textSize="18sp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -172,7 +190,10 @@
             android:paddingLeft="10dp"
             android:textSize="18sp"
             android:textColor="@color/whited2"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -190,7 +211,10 @@
             android:id="@+id/q3"
             android:textColor="@color/whited3"
             android:textSize="18sp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -207,7 +231,10 @@
             android:textSize="18sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited4"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
         <View
             android:layout_width="250dp"
@@ -224,7 +251,10 @@
             android:paddingLeft="10dp"
             android:textColor="@color/whited5"
             android:textSize="18sp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:maxLines="2"
+            android:ellipsize="end" />
 
     </LinearLayout>
     </ScrollView>

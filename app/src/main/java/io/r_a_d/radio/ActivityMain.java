@@ -343,12 +343,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
         TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
         String query = queryEditor.getText().toString().trim();
-
-        if(query.equals("")){
-            searchMsg.setVisibility(View.VISIBLE);
+        searchMsg.setVisibility(View.VISIBLE);
+        if(query.equals("")) {
             searchMsg.setText("You cannot search for nothing.");
-        }
-        else {
+        } else {
+            searchMsg.setText("Searching...");
             if (curView != null) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
@@ -382,7 +381,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 }
             }
 
-            searchMsg.setVisibility(View.INVISIBLE);
+            if(songs.length() == 0) {
+                searchMsg.setVisibility(View.VISIBLE);
+                searchMsg.setText("No songs found for query.");
+            } else {
+                searchMsg.setVisibility(View.INVISIBLE);
+            }
             songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, songList));
         }
         catch(JSONException ex){
