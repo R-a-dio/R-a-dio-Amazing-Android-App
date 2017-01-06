@@ -54,8 +54,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
 
-    private boolean playing = false;
-
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg){
