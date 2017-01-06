@@ -82,7 +82,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         tabLayout.setupWithViewPager(viewPager, true);
 
         scrapeNews(news_api_url);
-        scrapeJSON(api_url);
 
         handler.postDelayed(new Runnable(){
             public void run(){
@@ -103,6 +102,19 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
+    public void onBackPressed() {
+        if(viewPager.getCurrentItem() == 0) {
+            if(isDrawerVisible(findViewById(android.R.id.content))) {
+                closeSideDrawer();
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            viewPager.setCurrentItem(0, true);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -112,6 +124,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onResume() {
         super.onResume();
+        scrapeJSON(api_url);
     }
 
     @Override
@@ -536,6 +549,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         dl.openDrawer(dl.findViewById(R.id.left_drawer));
     }
 
+    public void closeSideDrawer() {
+        DrawerLayout dl = (DrawerLayout)findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
+        dl.closeDrawer(dl.findViewById(R.id.left_drawer));
+    }
+
     private void playPlayerService() {
         Intent i = new Intent(this, RadioService.class);
         i.putExtra("action", "io.r_a_d.radio.PLAY");
@@ -554,11 +572,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(!PlayerState.CURRENTLY_PLAYING){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
-            PlayerState.CURRENTLY_PLAYING = true;
         } else {
             img.setImageResource(R.drawable.arrow_small);
             pausePlayerService();
-            PlayerState.CURRENTLY_PLAYING = false;
         }
     }
 }

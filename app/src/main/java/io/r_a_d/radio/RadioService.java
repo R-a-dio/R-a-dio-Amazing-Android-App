@@ -11,8 +11,10 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.widget.RemoteViews;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -32,6 +34,7 @@ public class RadioService extends Service {
 
     private static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
     private static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
+    private static final String ACTION_NPAUSE = "io.r_a_d.radio.NPAUSE";
     private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
     private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
 
@@ -72,22 +75,7 @@ public class RadioService extends Service {
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
         createMediaPlayer();
 
-        Intent notificationIntent = new Intent(this, ActivityMain.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
 
-        Notification.Builder builder = new Notification.Builder(this);
-
-        builder.setContentTitle("R/a/dio is streaming");
-        builder.setContentText("Touch to return to app");
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setSmallIcon(R.drawable.lollipop_logo);
-            builder.setColor(0xFFDF4C3A);
-        } else {
-            builder.setSmallIcon(R.drawable.normal_logo);
-        }
-        builder.setContentIntent(pendingIntent);
-        notification = builder.build();
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
 
@@ -110,19 +98,68 @@ public class RadioService extends Service {
         sep.prepare(audioSource);
     }
 
+    public void createNotification() {
+        Intent notificationIntent = new Intent(this, ActivityMain.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        /*RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        contentView.setImageViewResource(R.id.notification_image, R.drawable.normal_logo);
+        contentView.setTextViewText(R.id.notification_title, "My custom notification title");
+        contentView.setTextViewText(R.id.notification_text, "My custom notification text");
+        builder.setContent(contentView);*/
+        builder.setContentTitle("R/a/dio is streaming");
+        builder.setContentText("Touch to return to app");
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setSmallIcon(R.drawable.lollipop_logo);
+            builder.setColor(0xFFDF4C3A);
+        } else {
+            builder.setSmallIcon(R.drawable.normal_logo);
+        }
+        if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        }
+        builder.setContentIntent(pendingIntent);
+        Intent intent = new Intent(this, RadioService.class);
+       NotificationCompat.Action action;
+        if(PlayerState.CURRENTLY_PLAYING) {
+            intent.putExtra("action", RadioService.ACTION_NPAUSE);
+            PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_pause, "Pause", pendingButtonIntent).build();
+        } else {
+            intent.putExtra("action", RadioService.ACTION_PLAY);
+            PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_play, "Play", pendingButtonIntent).build();
+        }
+        builder.addAction(action);
+        notification = builder.build();
+    }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
+            PlayerState.CURRENTLY_PLAYING = true;
+            createNotification();
             setupMediaPlayer();
             sep.setPlayWhenReady(true);
             acquireWakeLocks();
             startForeground(1, notification);
         } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)){
+            PlayerState.CURRENTLY_PLAYING = false;
             sep.stop();
             releaseWakeLocks();
             stopForeground(true);
+        } else if (intent.getStringExtra("action").equals(ACTION_NPAUSE)){
+            PlayerState.CURRENTLY_PLAYING = false;
+            createNotification();
+            sep.stop();
+            releaseWakeLocks();
+            startForeground(1, notification);
+            stopForeground(false);
         } else if (intent.getStringExtra("action").equals(ACTION_MUTE)){
             mutePlayer();
         } else if (intent.getStringExtra("action").equals(ACTION_UNMUTE)){
