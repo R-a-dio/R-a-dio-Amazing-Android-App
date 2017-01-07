@@ -44,7 +44,8 @@
         android:layout_marginEnd="5dp"
         android:backgroundTint="@drawable/button_selector"
         android:textColor="@color/whited"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:textAllCaps="false" />
 
     <View
         android:layout_height="1dp"
