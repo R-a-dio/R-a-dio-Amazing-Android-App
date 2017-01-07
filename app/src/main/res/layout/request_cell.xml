@@ -10,7 +10,7 @@
         android:id="@+id/songTitle"
         android:layout_toLeftOf="@+id/requestButton"
         android:padding="5dp"
-        android:textColor="@color/white"
+        android:textColor="#527a8e"
         android:textSize="18sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -26,7 +26,7 @@
         android:layout_toLeftOf="@+id/requestButton"
         android:padding="5dp"
         android:textSize="14sp"
-        android:textColor="@color/whited"
+        android:textColor="#a15755"
         android:layout_below="@+id/songTitle"
         android:layout_alignParentStart="true"
         android:text="Artist"
@@ -41,7 +41,10 @@
         android:id="@+id/requestButton"
         android:layout_gravity="center_vertical"
         android:layout_centerInParent="true"
-        android:layout_marginEnd="5dp" />
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@drawable/button_selector"
+        android:textColor="@color/whited"
+        android:textSize="12sp" />
 
     <View
         android:layout_height="1dp"
