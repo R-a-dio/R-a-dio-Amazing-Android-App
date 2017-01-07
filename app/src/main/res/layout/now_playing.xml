@@ -55,7 +55,7 @@
             android:id="@+id/tags"
             android:textIsSelectable="true"
             android:textColor="@color/white"
-            android:textSize="34sp"
+            android:textSize="28sp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             android:fadingEdge="horizontal"
