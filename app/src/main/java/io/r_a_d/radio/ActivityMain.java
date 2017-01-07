@@ -348,6 +348,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         performSearch(1);
     }
 
+    public void clearSearchClick(View clearSearchButton) {
+        View requestView = viewPager.findViewById(R.id.requests_page);
+
+        EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
+        queryEditor.setText("");
+
+        ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
+        ArrayList<Song> emptyList = new ArrayList<>();
+        songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, emptyList));
+    }
+
     private void performSearch(Integer pageNumber){
         View curView = getCurrentFocus();
         View requestView = viewPager.findViewById(R.id.requests_page);

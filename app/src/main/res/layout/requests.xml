@@ -39,6 +39,15 @@
             android:layout_marginStart="15dp" />
 
         <Button
+            android:id="@+id/clearSearchButton"
+            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:onClick="clearSearchClick"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp" />
+
+        <Button
             android:id="@+id/searchButton"
             android:background="@android:drawable/ic_menu_search"
             android:layout_width="30dp"
