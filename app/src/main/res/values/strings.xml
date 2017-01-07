@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">R/a/dio</string>
     <color name="black">#000000</color>
-    <color name="white">#F5F5F5</color>
+    <color name="white">#f5f5f5</color>
     <string name="home_page">Home</string>
     <string name="request_page">Request</string>
     <string name="news_page">News</string>

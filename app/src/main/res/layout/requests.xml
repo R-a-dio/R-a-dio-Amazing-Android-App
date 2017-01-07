@@ -22,7 +22,7 @@
             android:text="Search Here..."
             android:ems="10"
             android:id="@+id/searchquery"
-            android:textColor="@color/dark"
+            android:textColor="@color/white"
             android:textAlignment="textStart"
             android:textSize="18sp"
             android:inputType="text"
