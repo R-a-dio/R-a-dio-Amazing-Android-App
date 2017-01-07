@@ -48,7 +48,7 @@
 
     <View
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="@color/whited5"
         android:layout_width="250dp"
         android:layout_below="@id/artistName"
         android:layout_centerInParent="false"
