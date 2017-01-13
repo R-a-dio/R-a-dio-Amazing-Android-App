@@ -247,13 +247,38 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             lp2.setText(last_played_list.getJSONObject(2).getString("meta"));
             lp3.setText(last_played_list.getJSONObject(3).getString("meta"));
             lp4.setText(last_played_list.getJSONObject(4).getString("meta"));
+
             if(current_ui_json.getBoolean("isafkstream")) {
                 q1.setText(queue_list.getJSONObject(0).getString("meta"));
-                q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited, null));
+                if(queue_list.getJSONObject(0).getInt("type") == 1)
+                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bluereq, null));
+                else
+                    q1.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited, null));
+
                 q2.setText(queue_list.getJSONObject(1).getString("meta"));
+                if(queue_list.getJSONObject(1).getInt("type") == 1)
+                    q2.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bluereq, null));
+                else
+                    q2.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited2, null));
+
                 q3.setText(queue_list.getJSONObject(2).getString("meta"));
+                if(queue_list.getJSONObject(2).getInt("type") == 1)
+                    q3.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bluereq, null));
+                else
+                    q3.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited3, null));
+
                 q4.setText(queue_list.getJSONObject(3).getString("meta"));
+                if(queue_list.getJSONObject(3).getInt("type") == 1)
+                    q4.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bluereq, null));
+                else
+                    q4.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited4, null));
+
                 q5.setText(queue_list.getJSONObject(4).getString("meta"));
+                if(queue_list.getJSONObject(4).getInt("type") == 1)
+                    q5.setTextColor(ResourcesCompat.getColor(getResources(), R.color.bluereq, null));
+                else
+                    q5.setTextColor(ResourcesCompat.getColor(getResources(), R.color.whited5, null));
+
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.VISIBLE);
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.VISIBLE);
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.VISIBLE);
