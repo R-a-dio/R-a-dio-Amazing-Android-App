@@ -65,11 +65,10 @@ public class RadioService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(AudioManager.ACTION_HEADSET_PLUG) && (intent.getIntExtra("state", 0) == 0)) {
+            if(action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)/* || (action.equals(AudioManager.ACTION_HEADSET_PLUG) && (intent.getIntExtra("state", 0) == 0))*/) {
                 Intent i = new Intent(context, RadioService.class);
                 i.putExtra("action", "io.r_a_d.radio.PAUSE");
                 context.startService(i);
-                Toast.makeText(context,"Headset Unplugged", Toast.LENGTH_SHORT); // Get rid of this if it works!
             }
         }
     };
@@ -96,7 +95,8 @@ public class RadioService extends Service {
 
         // This stuff is for the broadcast receiver
         IntentFilter filter = new IntentFilter();
-        filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+//        filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(receiver, filter);
 
     }
