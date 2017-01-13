@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -305,6 +306,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 img.setImageResource(R.drawable.arrow_small);
             }
 
+            // I still do no know where things get instantiated so we'll do it here until we figure
+            // out one day.
+            np.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    setClipboard(v);
+                    Toast.makeText(getApplicationContext(), "Copied Now Playing to the Clipboard", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -573,6 +585,18 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         Intent i = new Intent(this, RadioService.class);
         i.putExtra("action", "io.r_a_d.radio.PAUSE");
         startService(i);
+    }
+
+    private void setClipboard(View v) {
+        String text = ((TextView) v).getText().toString();
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
     public void togglePlayPause(View v) {
