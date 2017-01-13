@@ -3,8 +3,11 @@ package io.r_a_d.radio;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -14,7 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -58,6 +61,18 @@ public class RadioService extends Service {
             }
         }
     };
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(AudioManager.ACTION_HEADSET_PLUG) && (intent.getIntExtra("state", 0) == 0)) {
+                Intent i = new Intent(context, RadioService.class);
+                i.putExtra("action", "io.r_a_d.radio.PAUSE");
+                context.startService(i);
+                Toast.makeText(context,"Headset Unplugged", Toast.LENGTH_SHORT); // Get rid of this if it works!
+            }
+        }
+    };
 
 
     private String radio_url = "https://stream.r-a-d.io/main.mp3";
@@ -78,6 +93,11 @@ public class RadioService extends Service {
 
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
+
+        // This stuff is for the broadcast receiver
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
+        registerReceiver(receiver, filter);
 
     }
 
@@ -177,6 +197,7 @@ public class RadioService extends Service {
         sep = null;
         releaseWakeLocks();
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
+        unregisterReceiver(receiver);
     }
 
     @Override
