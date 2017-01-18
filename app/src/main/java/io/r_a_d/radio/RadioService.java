@@ -50,6 +50,7 @@ public class RadioService extends Service {
     private SimpleExoPlayer sep;
     private Notification notification;
     private TelephonyManager mTelephonyManager;
+    private AudioManager am;
     private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -61,6 +62,29 @@ public class RadioService extends Service {
             }
         }
     };
+    private AudioManager.OnAudioFocusChangeListener focusChangeListener =
+            new AudioManager.OnAudioFocusChangeListener() {
+                public void onAudioFocusChange(int focusChange) {
+                    switch (focusChange) {
+
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
+                            sep.setVolume(0.2f);
+                            break;
+                        case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
+                            mutePlayer();
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_LOSS) :
+                            stopPlaying();
+                            break;
+
+                        case (AudioManager.AUDIOFOCUS_GAIN) :
+                            unmutePlayer();
+                            break;
+                        default: break;
+                    }
+                }
+            };
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -89,6 +113,8 @@ public class RadioService extends Service {
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
         createMediaPlayer();
 
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
 
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_CALL_STATE);
@@ -106,7 +132,7 @@ public class RadioService extends Service {
     }
 
     public void unmutePlayer() {
-        sep.setVolume((float) 1.0);
+        sep.setVolume(1.0f);
     }
 
     public void setupMediaPlayer() {
@@ -157,22 +183,33 @@ public class RadioService extends Service {
         notification = builder.build();
     }
 
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
+    public void beginPlaying() {
+        int result = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             PlayerState.CURRENTLY_PLAYING = true;
             createNotification();
             setupMediaPlayer();
             sep.setPlayWhenReady(true);
             acquireWakeLocks();
             startForeground(1, notification);
+        }
+    }
+
+    public void stopPlaying () {
+        PlayerState.CURRENTLY_PLAYING = false;
+        sep.stop();
+        releaseWakeLocks();
+        stopForeground(true);
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent == null || intent.getStringExtra("action") == null)return super.onStartCommand(intent, flags, startId);
+        if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
+            beginPlaying();
         } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)){
-            PlayerState.CURRENTLY_PLAYING = false;
-            sep.stop();
-            releaseWakeLocks();
-            stopForeground(true);
+            stopPlaying();
         } else if (intent.getStringExtra("action").equals(ACTION_NPAUSE)){
             PlayerState.CURRENTLY_PLAYING = false;
             createNotification();
