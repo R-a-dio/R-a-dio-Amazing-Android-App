@@ -36,16 +36,16 @@
     <Button
         android:text="@string/request_page"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:id="@+id/requestButton"
         android:layout_gravity="center_vertical"
         android:layout_centerInParent="true"
         android:layout_marginEnd="5dp"
-        android:backgroundTint="@drawable/button_selector"
+        android:background="@drawable/button_selector"
         android:textColor="@color/whited"
         android:textSize="12sp"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:layout_height="40dp" />
 
     <View
         android:layout_height="1dp"
