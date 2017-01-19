@@ -59,15 +59,17 @@
             android:text="W"
             android:layout_width="match_parent"
             android:id="@+id/lp4"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited5"
             android:layout_weight="0.06"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_height="1dp"
@@ -79,14 +81,16 @@
             android:text="A"
             android:layout_width="match_parent"
             android:id="@+id/lp3"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited4"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -99,13 +103,15 @@
             android:layout_width="match_parent"
             android:id="@+id/lp2"
             android:paddingLeft="10dp"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/whited3"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -116,15 +122,17 @@
         <TextView
             android:text="T"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/lp1"
             android:paddingLeft="10dp"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textColor="@color/whited2"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -135,15 +143,17 @@
         <TextView
             android:text="!"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/lp0"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="match_parent"
@@ -165,7 +175,7 @@
         <TextView
             android:text="P"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/q1"
             android:paddingLeft="10dp"
             android:textColor="@color/whited"
@@ -173,7 +183,9 @@
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -185,7 +197,7 @@
         <TextView
             android:text="L"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/q2"
             android:paddingLeft="10dp"
             android:textSize="18sp"
@@ -193,7 +205,9 @@
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -206,7 +220,7 @@
         <TextView
             android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:id="@+id/q3"
             android:textColor="@color/whited3"
@@ -214,7 +228,9 @@
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -226,7 +242,7 @@
         <TextView
             android:text="S"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/q4"
             android:textSize="18sp"
             android:paddingLeft="10dp"
@@ -234,7 +250,9 @@
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
 
         <View
             android:layout_width="250dp"
@@ -246,7 +264,7 @@
         <TextView
             android:text="E"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="wrap_content"
             android:id="@+id/q5"
             android:paddingLeft="10dp"
             android:textColor="@color/whited5"
@@ -254,7 +272,9 @@
             android:gravity="center_vertical"
             android:textIsSelectable="true"
             android:maxLines="2"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
 
     </LinearLayout>
     </ScrollView>
