@@ -44,7 +44,7 @@
             android:text="Last Played"
             android:layout_width="match_parent"
             android:id="@+id/lp_label"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/orange"
             android:textStyle="normal|bold"
             android:layout_weight="0.07"
@@ -52,7 +52,8 @@
             android:paddingLeft="10dp"
             android:gravity="center_vertical"
             android:paddingBottom="2dp"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp" />
 
 
         <TextView
@@ -73,7 +74,7 @@
 
         <View
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:layout_width="250dp"
             android:layout_gravity="center" />
 
@@ -95,7 +96,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:layout_gravity="center" />
 
         <TextView
@@ -116,7 +117,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:layout_gravity="center" />
 
         <TextView
@@ -137,7 +138,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:layout_gravity="center" />
 
         <TextView
@@ -157,8 +158,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:background="@android:color/black"
-            android:layout_height="2dp" />
+            android:background="@color/black"
+            android:layout_height="2dp"
+            android:layout_marginTop="6dp" />
 
 
         <TextView
@@ -168,9 +170,11 @@
             android:textColor="@color/orange"
             android:textStyle="normal|bold"
             android:paddingLeft="10dp"
-            android:gravity="top"
             android:layout_height="30dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:paddingBottom="2dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp" />
 
         <TextView
             android:text="P"
@@ -190,7 +194,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:id="@+id/hide_view4"
             android:layout_gravity="center" />
 
@@ -212,7 +216,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:id="@+id/hide_view3"
             android:layout_gravity="center" />
 
@@ -235,7 +239,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:id="@+id/hide_view2"
             android:layout_gravity="center" />
 
@@ -257,7 +261,7 @@
         <View
             android:layout_width="250dp"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/whited5"
             android:id="@+id/hide_view1"
             android:layout_gravity="center" />
 
