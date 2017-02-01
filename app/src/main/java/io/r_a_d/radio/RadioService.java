@@ -139,15 +139,13 @@ public class RadioService extends Service {
         }
     }
 
-    private void maybeUpdateBluetooth(String title, String artist, String album, long duration, long position, long trackNumber) {
+    private void maybeUpdateBluetooth(String title, String artist, long duration, long position) {
         if (am.isBluetoothA2dpOn()) {
 
             MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, trackNumber)
                     .build();
 
             mMediaSession.setMetadata(metadata);
