@@ -13,11 +13,14 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -51,6 +54,9 @@ public class RadioService extends Service {
     private Notification notification;
     private TelephonyManager mTelephonyManager;
     private AudioManager am;
+
+    private MediaSessionCompat mMediaSession;
+
     private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -125,6 +131,34 @@ public class RadioService extends Service {
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(receiver, filter);
 
+        // This stuff is for allowing bluetooth tags
+        if (mMediaSession == null) {
+            mMediaSession = new MediaSessionCompat(this, "RadioServiceMediaSession");
+            mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            mMediaSession.setActive(true);
+        }
+    }
+
+    private void maybeUpdateBluetooth(String title, String artist, String album, long duration, long position, long trackNumber) {
+        if (am.isBluetoothA2dpOn()) {
+
+            MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
+                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                    .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, trackNumber)
+                    .build();
+
+            mMediaSession.setMetadata(metadata);
+
+            PlaybackStateCompat state = new PlaybackStateCompat.Builder()
+                    .setActions(PlaybackStateCompat.ACTION_PLAY)
+                    .setState(PlaybackStateCompat.STATE_PLAYING, position, 1.0f, SystemClock.elapsedRealtime())
+                    .build();
+
+            mMediaSession.setPlaybackState(state);
+        }
     }
 
     public void mutePlayer() {
@@ -235,6 +269,7 @@ public class RadioService extends Service {
         releaseWakeLocks();
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
         unregisterReceiver(receiver);
+        mMediaSession.release();
     }
 
     @Override
