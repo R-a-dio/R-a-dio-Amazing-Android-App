@@ -3,13 +3,18 @@ package io.r_a_d.radio;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,8 +37,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
@@ -54,6 +60,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private final Object lock = new Object();
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
+
+    private AudioManager am;
+    private MediaSessionCompat mMediaSession;
 
     private Handler handler = new Handler(){
         @Override
@@ -98,7 +107,37 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         songCalcThread.setDaemon(true);
         songCalcThread.start();
         mRequestor = new Requestor(this);
+
+        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+
+        // This stuff is for allowing bluetooth tags
+        if (mMediaSession == null) {
+            mMediaSession = new MediaSessionCompat(this, "RadioServiceMediaSession");
+            mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+            mMediaSession.setActive(true);
+        }
     }
+
+    private void maybeUpdateBluetooth(String title, String artist, long duration, long position) {
+        if (am.isBluetoothA2dpOn()) {
+
+            MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
+                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                    .build();
+
+            mMediaSession.setMetadata(metadata);
+
+            PlaybackStateCompat state = new PlaybackStateCompat.Builder()
+                    .setActions(PlaybackStateCompat.ACTION_PLAY)
+                    .setState(PlaybackStateCompat.STATE_PLAYING, position, 1.0f, SystemClock.elapsedRealtime())
+                    .build();
+
+            mMediaSession.setPlaybackState(state);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -119,6 +158,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         if(songCalcThread.isAlive() && !songCalcThread.isInterrupted())
             songCalcThread.interrupt();
+
+        mMediaSession.release();
     }
     @Override
     protected void onResume() {
@@ -232,6 +273,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             if(!np.getText().toString().equals(tags)) {
                 np.setText(tags);
+                PlayerState.NOW_PLAYING = tags;
                 synchronized (lock)
                 {
                     songTimes.put("start", song_start);
@@ -341,7 +383,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     return true;
                 }
             });
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -555,6 +596,22 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                         songVals.put("length", length * 1000);
                         songVals.put("totalMinutes", totalMinutes);
                         songVals.put("totalSeconds", totalSeconds);
+
+                        // Bluetooth Tag?
+                        String songName = "";
+                        String artistName = "";
+                        String np = PlayerState.NOW_PLAYING;
+                        int hyphenPos = np.indexOf(" - ");
+                        if (hyphenPos==-1) {
+                            songName = np;
+                        }
+                        else {
+                            try {
+                                songName = URLDecoder.decode(np.substring(hyphenPos+3), "UTF-8");
+                                artistName = URLDecoder.decode(np.substring(0,hyphenPos), "UTF-8");
+                            } catch (Exception e) {}
+                        }
+                        maybeUpdateBluetooth(songName, artistName, length, position);
                     }
                     else{
                         position += UPDATE_INTERVAL;

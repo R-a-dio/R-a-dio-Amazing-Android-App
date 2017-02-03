@@ -55,8 +55,6 @@ public class RadioService extends Service {
     private TelephonyManager mTelephonyManager;
     private AudioManager am;
 
-    private MediaSessionCompat mMediaSession;
-
     private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -130,33 +128,6 @@ public class RadioService extends Service {
 //        filter.addAction(AudioManager.ACTION_HEADSET_PLUG);
         filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         registerReceiver(receiver, filter);
-
-        // This stuff is for allowing bluetooth tags
-        if (mMediaSession == null) {
-            mMediaSession = new MediaSessionCompat(this, "RadioServiceMediaSession");
-            mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-            mMediaSession.setActive(true);
-        }
-    }
-
-    private void maybeUpdateBluetooth(String title, String artist, long duration, long position) {
-        if (am.isBluetoothA2dpOn()) {
-
-            MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
-                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                    .build();
-
-            mMediaSession.setMetadata(metadata);
-
-            PlaybackStateCompat state = new PlaybackStateCompat.Builder()
-                    .setActions(PlaybackStateCompat.ACTION_PLAY)
-                    .setState(PlaybackStateCompat.STATE_PLAYING, position, 1.0f, SystemClock.elapsedRealtime())
-                    .build();
-
-            mMediaSession.setPlaybackState(state);
-        }
     }
 
     public void mutePlayer() {
@@ -267,7 +238,6 @@ public class RadioService extends Service {
         releaseWakeLocks();
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
         unregisterReceiver(receiver);
-        mMediaSession.release();
     }
 
     @Override

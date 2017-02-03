@@ -6,4 +6,5 @@ package io.r_a_d.radio;
 
 public final class PlayerState {
     public static boolean CURRENTLY_PLAYING = false;
+    public static String NOW_PLAYING = "";
 }
