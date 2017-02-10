@@ -111,11 +111,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         // This stuff is for allowing bluetooth tags
-        if (mMediaSession == null) {
-            mMediaSession = new MediaSessionCompat(this, "RadioServiceMediaSession");
-            mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-            mMediaSession.setActive(true);
-        }
+        mMediaSession = new MediaSessionCompat(this, "RadioMediaSession");
+        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mMediaSession.setActive(true);
     }
 
     private void maybeUpdateBluetooth(String title, String artist, long duration, long position) {
@@ -124,6 +122,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, artist)
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                     .build();
 
@@ -136,6 +135,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             mMediaSession.setPlaybackState(state);
         }
+        Intent i = new Intent("com.android.music.metachanged");
+        i.putExtra("artist", artist);
+        i.putExtra("track", title);
+        i.putExtra("duration", duration);
+        i.putExtra("position", position);
+        sendBroadcast(i);
     }
 
 
