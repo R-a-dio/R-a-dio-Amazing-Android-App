@@ -1,13 +1,10 @@
 package io.r_a_d.radio;
 
 import android.os.AsyncTask;
-import android.util.Xml;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,15 +65,10 @@ public class Requestor {
         @Override
         protected String doInBackground(CookieManager... params) {
             URL searchURL = null;
-            XmlPullParser xmlParser = Xml.newPullParser();
             String retVal = null;
             BufferedReader reader = null;
 
             CookieHandler.setDefault(params[0]);
-            try {
-                xmlParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
-            }
-            catch (XmlPullParserException ex) {}
 
             try {
                 searchURL = new URL(RADIO_SEARCH);
