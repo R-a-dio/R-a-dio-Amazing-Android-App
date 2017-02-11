@@ -11,6 +11,7 @@
     <string name="requests">REQUESTS</string>
     <string name="news">NEWS</string>
     <string name="connecting">Connecting...</string>
+    <string name="dots">...</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

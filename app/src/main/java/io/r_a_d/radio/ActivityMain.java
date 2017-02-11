@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -60,6 +61,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private final Object lock = new Object();
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
+    private View searchFooter;
 
     private AudioManager am;
     private MediaSessionCompat mMediaSession;
@@ -439,6 +441,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
         ArrayList<Song> emptyList = new ArrayList<>();
+        songListView.removeFooterView(searchFooter);
         songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, emptyList));
     }
 
@@ -467,10 +470,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         View requestView = viewPager.findViewById(R.id.requests_page);
         TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
         ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
+        Integer curPage, lastPage;
 
         try {
-            JSONArray songs = new JSONArray(new JSONObject(json).getString("data"));
+            JSONObject searchObject = new JSONObject(json);
+            JSONArray songs = new JSONArray(searchObject.getString("data"));
             ArrayList<Song> songList = new ArrayList<>();
+            curPage = searchObject.getInt("current_page");
+            lastPage = searchObject.getInt("last_page");
 
             for (int i = 0; i < songs.length(); i++){
                 JSONObject songObject = songs.getJSONObject(i);
@@ -492,12 +499,219 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             } else {
                 searchMsg.setVisibility(View.INVISIBLE);
             }
-            songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, songList));
+
+            if(searchFooter == null || songListView.getFooterViewsCount() == 0) {
+                createSearchFooter(curPage, lastPage);
+                songListView.addFooterView(searchFooter);
+            }
+            else {
+                createSearchFooter(curPage, lastPage);
+            }
+            SongAdapter sAdapt = new SongAdapter(this, R.layout.request_cell, songList);
+            songListView.setAdapter(sAdapt);
         }
         catch(JSONException ex){
             searchMsg.setVisibility(View.VISIBLE);
             searchMsg.setText("An error occurred while retrieving songs. Please try again.");
         }
+    }
+
+    private void createSearchFooter(final Integer curPage, final Integer lastPage) {
+        View view = searchFooter;
+
+        if(view == null)
+            view = this.getLayoutInflater().inflate(R.layout.page_buttons, null);
+
+        if(curPage <= 5) {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+
+            searchPageButton.setTextColor(getResources().getColor(R.color.rblue));
+            searchPageButton.setEnabled(true);
+            searchPageButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+
+            searchPageButton.setText(R.string.dots);
+            searchPageButton.setTextColor(getResources().getColor(R.color.whited2));
+            searchPageButton.setEnabled(false);
+        }
+
+        if(curPage <= 4) {
+            view.findViewById(R.id.searchFirstPage).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchFirstPage);
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(1);
+                }
+            });
+        }
+
+        if(curPage <= 3) {
+            view.findViewById(R.id.searchB1).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+            Integer num = curPage - 3;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+
+            if(curPage <= 5) {
+                searchPageButton.setText(num.toString());
+                searchPageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        performSearch(curPage - 3);
+                    }
+                });
+            }
+        }
+
+        if(curPage <= 2) {
+            view.findViewById(R.id.searchB2).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB2);
+            Integer num = curPage - 2;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(num.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(curPage - 2);
+                }
+            });
+        }
+
+        if(curPage == 1) {
+            view.findViewById(R.id.searchB3).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB3);
+            Integer num = curPage - 1;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(num.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(curPage - 1);
+                }
+            });
+        }
+
+        if(curPage >= (lastPage - 4)) {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+
+            searchPageButton.setTextColor(getResources().getColor(R.color.rblue));
+            searchPageButton.setEnabled(true);
+            searchPageButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+
+            searchPageButton.setText(R.string.dots);
+            searchPageButton.setTextColor(getResources().getColor(R.color.whited2));
+            searchPageButton.setEnabled(false);
+        }
+
+        if(curPage >= (lastPage - 3)) {
+            view.findViewById(R.id.searchLastPage).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchLastPage);
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(lastPage.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(lastPage);
+                }
+            });
+        }
+
+        if(curPage >= (lastPage - 2)) {
+            view.findViewById(R.id.searchB7).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+            Integer num = curPage + 3;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+
+            if(curPage >= (lastPage - 4)) {
+                searchPageButton.setText(num.toString());
+                searchPageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        performSearch(curPage + 3);
+                    }
+                });
+            }
+        }
+
+        if(curPage >= (lastPage - 1)) {
+            view.findViewById(R.id.searchB6).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB6);
+            Integer num = curPage + 2;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(num.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(curPage + 2);
+                }
+            });
+        }
+
+        /*
+        if(curPage >= (lastPage - 1)) {
+            view.findViewById(R.id.searchB6).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB6);
+            Integer num = curPage + 2;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(num.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(curPage + 2);
+                }
+            });
+        }
+        */
+
+        if(curPage.equals(lastPage)) {
+            view.findViewById(R.id.searchB5).setVisibility(View.INVISIBLE);
+        }
+        else {
+            Button searchPageButton = (Button) view.findViewById(R.id.searchB5);
+            Integer num = curPage + 1;
+
+            searchPageButton.setVisibility(View.VISIBLE);
+            searchPageButton.setText(num.toString());
+            searchPageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performSearch(curPage + 1);
+                }
+            });
+        }
+
+        ((Button) view.findViewById(R.id.searchB4)).setText(curPage.toString());
+        searchFooter = view;
     }
 
     public void setNewsUI(String jsonString) throws JSONException {

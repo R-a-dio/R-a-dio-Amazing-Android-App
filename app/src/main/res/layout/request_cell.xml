@@ -10,7 +10,7 @@
         android:id="@+id/songTitle"
         android:layout_toLeftOf="@+id/requestButton"
         android:padding="5dp"
-        android:textColor="#527a8e"
+        android:textColor="@color/blueTitle"
         android:textSize="18sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
