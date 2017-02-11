@@ -674,25 +674,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             });
         }
 
-        /*
-        if(curPage >= (lastPage - 1)) {
-            view.findViewById(R.id.searchB6).setVisibility(View.INVISIBLE);
-        }
-        else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB6);
-            Integer num = curPage + 2;
-
-            searchPageButton.setVisibility(View.VISIBLE);
-            searchPageButton.setText(num.toString());
-            searchPageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    performSearch(curPage + 2);
-                }
-            });
-        }
-        */
-
         if(curPage.equals(lastPage)) {
             view.findViewById(R.id.searchB5).setVisibility(View.INVISIBLE);
         }
