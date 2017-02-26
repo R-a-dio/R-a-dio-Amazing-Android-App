@@ -49,8 +49,6 @@
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
-                android:clickable="false"
-                android:autoLink="web"
                 android:paddingTop="10dp" />
 
             <FrameLayout
@@ -85,8 +83,6 @@
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
-                android:clickable="false"
-                android:autoLink="web"
                 android:paddingTop="10dp" />
 
             <FrameLayout
@@ -121,8 +117,6 @@
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:textColor="@color/white"
-                android:clickable="false"
-                android:autoLink="web"
                 android:paddingTop="10dp" />
 
         </LinearLayout>
