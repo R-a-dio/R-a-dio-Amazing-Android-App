@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -708,8 +709,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         TextView news2 = (TextView)news_view.findViewById(R.id.news2);
         TextView news3 = (TextView)news_view.findViewById(R.id.news3);
         news1.setText(Html.fromHtml((newsjson.getJSONObject(0).getString("text"))));
+        news1.setMovementMethod(LinkMovementMethod.getInstance());
         news2.setText(Html.fromHtml((newsjson.getJSONObject(1).getString("text"))));
+        news2.setMovementMethod(LinkMovementMethod.getInstance());
         news3.setText(Html.fromHtml((newsjson.getJSONObject(2).getString("text"))));
+        news3.setMovementMethod(LinkMovementMethod.getInstance());
         //news_view.setText(Html.fromHtml("<h2>Title</h2><br><p>Description here</p>"));
     }
 
