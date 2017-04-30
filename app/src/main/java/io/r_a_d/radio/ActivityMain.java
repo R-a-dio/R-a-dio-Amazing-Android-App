@@ -42,39 +42,33 @@ import org.json.JSONObject;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageChangeListener{
 
+    private final Integer API_FETCH_INTERVAL = 10000;
+    private final Integer UPDATE_SONGTIME_INTERVAL = 500;
+    private final String MAIN_API = "https://r-a-d.io/api";
+    private final String DJIMAGE_API = "https://r-a-d.io/api/dj-image/";
+    private final String NEWS_API = "https://r-a-d.io/api/news/";
+    private final String SEARCH_API = "https://r-a-d.io/api/search/%1s?page=%2$d";
+    private final Object lock = new Object();
+
     private boolean songChanged = false;
     private boolean firstSearchClick = true;
-    private Integer api_update_delay = 10000;
-    private final Integer UPDATE_INTERVAL = 500;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
     private DJImageTask djimageTask = new DJImageTask(this);
-    private String api_url = "https://r-a-d.io/api";
-    private String djimage_api = "https://r-a-d.io/api/dj-image/";
-    private String news_api_url = "https://r-a-d.io/api/news/";
-    private final String SEARCH_API = "https://r-a-d.io/api/search/%1s?page=%2$d";
     private String current_dj_image;
     public JSONObject current_ui_json;
-    private Thread songCalcThread;
-    private final Object lock = new Object();
+    private ScheduledExecutorService scheduledTaskExecutor;
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
     private View searchFooter;
-
     private AudioManager am;
     private MediaSessionCompat mMediaSession;
-
-    private Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            if(msg.what == 0){
-                updateUI();
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,23 +86,23 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_dots);
         tabLayout.setupWithViewPager(viewPager, true);
 
-        scrapeNews(news_api_url);
+        scrapeNews(NEWS_API);
 
-        handler.postDelayed(new Runnable(){
+        scheduledTaskExecutor = Executors.newSingleThreadScheduledExecutor();
+
+        scheduledTaskExecutor.scheduleWithFixedDelay(new Runnable(){
             public void run(){
-                scrapeJSON(api_url);
-                handler.postDelayed(this, api_update_delay);
+                scrapeJSON(MAIN_API);
             }
-        }, api_update_delay);
+        }, 0, API_FETCH_INTERVAL, TimeUnit.MILLISECONDS);
 
-        songCalcThread = new Thread(new Runnable() {
+        scheduledTaskExecutor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
                 calculateSongTimes();
             }
-        });
-        songCalcThread.setDaemon(true);
-        songCalcThread.start();
+        }, 0, UPDATE_SONGTIME_INTERVAL, TimeUnit.MILLISECONDS);
+
         mRequestor = new Requestor(this);
 
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -164,15 +158,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     protected void onDestroy() {
         super.onDestroy();
 
-        if(songCalcThread.isAlive() && !songCalcThread.isInterrupted())
-            songCalcThread.interrupt();
+        scheduledTaskExecutor.shutdownNow();
 
         mMediaSession.release();
     }
     @Override
     protected void onResume() {
         super.onResume();
-        scrapeJSON(api_url);
+        scrapeJSON(MAIN_API);
     }
 
     @Override
@@ -268,7 +261,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             if(current_dj_image == null || !current_dj_image.equals(djimgid)) {
                 current_dj_image = djimgid;
-                scrapeDJImage(djimage_api + djimgid);
+                scrapeDJImage(DJIMAGE_API + djimgid);
             }
 
             if(!threadurl.isEmpty() && !current_ui_json.getBoolean("isafkstream") && URLUtil.isValidUrl(threadurl)) {
@@ -289,6 +282,21 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     songTimes.put("position", song_length_position * 1000);
                     songChanged = true;
                 }
+
+                // Bluetooth Tag?
+                String songName = "";
+                String artistName = "";
+                int hyphenPos = tags.indexOf(" - ");
+                if (hyphenPos == -1) {
+                    songName = tags;
+                }
+                else {
+                    try {
+                        songName = URLDecoder.decode(tags.substring(hyphenPos+3), "UTF-8");
+                        artistName = URLDecoder.decode(tags.substring(0,hyphenPos), "UTF-8");
+                    } catch (Exception e) {}
+                }
+                maybeUpdateBluetooth(songName, artistName, (song_end - song_start) * 1000, song_length_position * 1000);
                 //pb.setMax(song_length);
             }
 
@@ -770,74 +778,53 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private void calculateSongTimes()
     {
         try{
-            while(true) {
-                final HashMap<String, Integer> songVals = new HashMap<>();
-                Integer start, end, position;
+            final HashMap<String, Integer> songVals = new HashMap<>();
+            Integer start, end, position;
 
-                synchronized (lock) {
-                    if(songTimes.containsKey("start"))
-                        start = songTimes.get("start");
-                    else
-                        start = 0;
+            synchronized (lock) {
+                if(songTimes.containsKey("start"))
+                    start = songTimes.get("start");
+                else
+                    start = 0;
 
-                    if(songTimes.containsKey("end"))
-                        end = songTimes.get("end");
-                    else
-                        end = 0;
+                if(songTimes.containsKey("end"))
+                    end = songTimes.get("end");
+                else
+                    end = 0;
 
-                    if(songTimes.containsKey("position"))
-                        position = songTimes.get("position");
-                    else
-                        position = 0;
+                if(songTimes.containsKey("position"))
+                    position = songTimes.get("position");
+                else
+                    position = 0;
 
-                    if(songChanged){
-                        songChanged = false;
-                        position = position * 1000;
-                        Integer length = end - start;
-                        Integer totalMinutes = length / 60;
-                        Integer totalSeconds = length % 60;
+                if(songChanged){
+                    songChanged = false;
+                    Integer length = end - start;
+                    Integer totalMinutes = length / 60;
+                    Integer totalSeconds = length % 60;
 
-                        songVals.put("length", length * 1000);
-                        songVals.put("totalMinutes", totalMinutes);
-                        songVals.put("totalSeconds", totalSeconds);
-
-                        // Bluetooth Tag?
-                        String songName = "";
-                        String artistName = "";
-                        String np = PlayerState.NOW_PLAYING;
-                        int hyphenPos = np.indexOf(" - ");
-                        if (hyphenPos==-1) {
-                            songName = np;
-                        }
-                        else {
-                            try {
-                                songName = URLDecoder.decode(np.substring(hyphenPos+3), "UTF-8");
-                                artistName = URLDecoder.decode(np.substring(0,hyphenPos), "UTF-8");
-                            } catch (Exception e) {}
-                        }
-                        maybeUpdateBluetooth(songName, artistName, length, position);
-                    }
-                    else{
-                        position += UPDATE_INTERVAL;
-                        songTimes.put("position", position);
-                    }
+                    songVals.put("length", length * 1000);
+                    songVals.put("totalMinutes", totalMinutes);
+                    songVals.put("totalSeconds", totalSeconds);
                 }
-
-                songVals.put("position", position);
-                songVals.put("elapsedMinutes", (position / 1000) / 60);
-                songVals.put("elapsedSeconds", (position / 1000) % 60);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateSongProgress(songVals);
-                    }
-                });
-
-                Thread.sleep(UPDATE_INTERVAL);
+                else{
+                    position += UPDATE_SONGTIME_INTERVAL;
+                    songTimes.put("position", position);
+                }
             }
+
+            songVals.put("position", position);
+            songVals.put("elapsedMinutes", (position / 1000) / 60);
+            songVals.put("elapsedSeconds", (position / 1000) % 60);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateSongProgress(songVals);
+                }
+            });
         }
-        catch(InterruptedException ex) {}
+        catch(Exception ex) {}
     }
 
     private boolean isDrawerVisible(View view) {
