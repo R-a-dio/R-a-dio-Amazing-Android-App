@@ -58,6 +58,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     private boolean songChanged = false;
     private boolean firstSearchClick = true;
+    private boolean sendBluetoothMeta = false;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
     private DJImageTask djimageTask = new DJImageTask(this);
@@ -113,14 +114,41 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         mMediaSession.setActive(true);
     }
 
-    private void maybeUpdateBluetooth(String title, String artist, long duration, long position) {
-        if (am.isBluetoothA2dpOn()) {
+    private void maybeUpdateBluetooth() {
+        String title = "";
+        String artist = "";
+        Integer length, position;
+        String np = PlayerState.NOW_PLAYING;
+        int hyphenPos = np.indexOf(" - ");
 
+        synchronized (lock){
+            if(songTimes.containsKey("length"))
+                length = songTimes.get("length");
+            else
+                length = 0;
+
+            if(songTimes.containsKey("position"))
+                position = songTimes.get("position");
+            else
+                position = 0;
+        }
+
+        if (hyphenPos == -1) {
+            title = np;
+        } else {
+            try {
+                title = URLDecoder.decode(np.substring(hyphenPos + 3), "UTF-8");
+                artist = URLDecoder.decode(np.substring(0, hyphenPos), "UTF-8");
+            } catch (Exception e) {
+            }
+        }
+
+        if (am.isBluetoothA2dpOn()) {
             MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, artist)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, length)
                     .build();
 
             mMediaSession.setMetadata(metadata);
@@ -132,10 +160,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             mMediaSession.setPlaybackState(state);
         }
+
         Intent i = new Intent("com.android.music.metachanged");
         i.putExtra("artist", artist);
         i.putExtra("track", title);
-        i.putExtra("duration", duration);
+        i.putExtra("duration", length);
         i.putExtra("position", position);
         sendBroadcast(i);
     }
@@ -282,21 +311,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                     songTimes.put("position", song_length_position * 1000);
                     songChanged = true;
                 }
-
-                // Bluetooth Tag?
-                String songName = "";
-                String artistName = "";
-                int hyphenPos = tags.indexOf(" - ");
-                if (hyphenPos == -1) {
-                    songName = tags;
-                }
-                else {
-                    try {
-                        songName = URLDecoder.decode(tags.substring(hyphenPos+3), "UTF-8");
-                        artistName = URLDecoder.decode(tags.substring(0,hyphenPos), "UTF-8");
-                    } catch (Exception e) {}
-                }
-                maybeUpdateBluetooth(songName, artistName, (song_end - song_start) * 1000, song_length_position * 1000);
                 //pb.setMax(song_length);
             }
 
@@ -799,9 +813,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
                 if(songChanged){
                     songChanged = false;
+
+                    if(PlayerState.CURRENTLY_PLAYING)
+                        sendBluetoothMeta = true;
+
                     Integer length = end - start;
                     Integer totalMinutes = length / 60;
                     Integer totalSeconds = length % 60;
+
+                    songTimes.put("length", length);
+                    songTimes.put("totalMinutes", totalMinutes);
+                    songTimes.put("totalSeconds", totalSeconds);
 
                     songVals.put("length", length * 1000);
                     songVals.put("totalMinutes", totalMinutes);
@@ -816,6 +838,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             songVals.put("position", position);
             songVals.put("elapsedMinutes", (position / 1000) / 60);
             songVals.put("elapsedSeconds", (position / 1000) % 60);
+
+            // Bluetooth Tag?
+            if(sendBluetoothMeta){
+                sendBluetoothMeta = false;
+                maybeUpdateBluetooth();
+            }
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -878,9 +906,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(!PlayerState.CURRENTLY_PLAYING){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
+            sendBluetoothMeta = true;
         } else {
             img.setImageResource(R.drawable.arrow_small);
             pausePlayerService();
+            sendBluetoothMeta = false;
         }
     }
 }
