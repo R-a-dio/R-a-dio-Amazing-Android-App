@@ -59,6 +59,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private boolean songChanged = false;
     private boolean firstSearchClick = true;
     private boolean sendBluetoothMeta = false;
+    private boolean newsSet = false;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
     private DJImageTask djimageTask = new DJImageTask(this);
@@ -223,6 +224,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 break;
             case R.id.news_page:
                 title_text.setText(R.string.news_page);
+                if(!newsSet)
+                    scrapeNews(NEWS_API);
                 break;
         }
     }
@@ -724,22 +727,25 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void setNewsUI(String jsonString) throws JSONException {
         JSONArray newsjson = new JSONArray(jsonString);
         View news_view = viewPager.getChildAt(2);
-        TextView newst1 = (TextView)news_view.findViewById(R.id.news_title1);
-        TextView newst2 = (TextView)news_view.findViewById(R.id.news_title2);
-        TextView newst3 = (TextView)news_view.findViewById(R.id.news_title3);
-        newst1.setText(newsjson.getJSONObject(0).getString("title"));
-        newst2.setText(newsjson.getJSONObject(1).getString("title"));
-        newst3.setText(newsjson.getJSONObject(2).getString("title"));
-        TextView news1 = (TextView)news_view.findViewById(R.id.news1);
-        TextView news2 = (TextView)news_view.findViewById(R.id.news2);
-        TextView news3 = (TextView)news_view.findViewById(R.id.news3);
-        news1.setText(Html.fromHtml((newsjson.getJSONObject(0).getString("text"))));
-        news1.setMovementMethod(LinkMovementMethod.getInstance());
-        news2.setText(Html.fromHtml((newsjson.getJSONObject(1).getString("text"))));
-        news2.setMovementMethod(LinkMovementMethod.getInstance());
-        news3.setText(Html.fromHtml((newsjson.getJSONObject(2).getString("text"))));
-        news3.setMovementMethod(LinkMovementMethod.getInstance());
-        //news_view.setText(Html.fromHtml("<h2>Title</h2><br><p>Description here</p>"));
+
+        if(news_view != null) {
+            TextView newst1 = (TextView) news_view.findViewById(R.id.news_title1);
+            TextView newst2 = (TextView) news_view.findViewById(R.id.news_title2);
+            TextView newst3 = (TextView) news_view.findViewById(R.id.news_title3);
+            newst1.setText(newsjson.getJSONObject(0).getString("title"));
+            newst2.setText(newsjson.getJSONObject(1).getString("title"));
+            newst3.setText(newsjson.getJSONObject(2).getString("title"));
+            TextView news1 = (TextView) news_view.findViewById(R.id.news1);
+            TextView news2 = (TextView) news_view.findViewById(R.id.news2);
+            TextView news3 = (TextView) news_view.findViewById(R.id.news3);
+            news1.setText(Html.fromHtml((newsjson.getJSONObject(0).getString("text"))));
+            news1.setMovementMethod(LinkMovementMethod.getInstance());
+            news2.setText(Html.fromHtml((newsjson.getJSONObject(1).getString("text"))));
+            news2.setMovementMethod(LinkMovementMethod.getInstance());
+            news3.setText(Html.fromHtml((newsjson.getJSONObject(2).getString("text"))));
+            news3.setMovementMethod(LinkMovementMethod.getInstance());
+            newsSet = true;
+        }
     }
 
     public void scrapeDJImage(String urlToScrape){
