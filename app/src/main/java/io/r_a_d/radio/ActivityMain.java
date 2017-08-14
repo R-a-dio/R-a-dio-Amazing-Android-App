@@ -209,7 +209,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
         }
 
-        int pageID = page.getId();
+        int pageID = R.id.now_playing_page;
+
+        if(page != null)
+            pageID = page.getId();
 
         switch (pageID){
             case R.id.now_playing_page:
