@@ -13,11 +13,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -72,7 +68,8 @@ public class RadioService extends Service {
                     switch (focusChange) {
 
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) :
-                            sep.setVolume(0.2f);
+                            if(sep != null)
+                                sep.setVolume(0.2f);
                             break;
                         case (AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) :
                             mutePlayer();
@@ -131,11 +128,13 @@ public class RadioService extends Service {
     }
 
     public void mutePlayer() {
-        sep.setVolume(0);
+        if(sep != null)
+            sep.setVolume(0);
     }
 
     public void unmutePlayer() {
-        sep.setVolume(1.0f);
+        if(sep != null)
+            sep.setVolume(1.0f);
     }
 
     public void setupMediaPlayer() {
@@ -144,7 +143,8 @@ public class RadioService extends Service {
         ExtractorsFactory extractors = new DefaultExtractorsFactory();
         MediaSource audioSource = new ExtractorMediaSource(Uri.parse(radio_url), dsf, extractors, null, null);
 
-        sep.prepare(audioSource);
+        if(sep != null)
+            sep.prepare(audioSource);
     }
 
     public void createNotification() {
@@ -192,7 +192,10 @@ public class RadioService extends Service {
             PlayerState.CURRENTLY_PLAYING = true;
             createNotification();
             setupMediaPlayer();
-            sep.setPlayWhenReady(true);
+
+            if(sep != null)
+                sep.setPlayWhenReady(true);
+
             acquireWakeLocks();
             startForeground(1, notification);
         }
@@ -200,7 +203,10 @@ public class RadioService extends Service {
 
     public void stopPlaying () {
         PlayerState.CURRENTLY_PLAYING = false;
-        sep.stop();
+
+        if(sep != null)
+            sep.stop();
+
         releaseWakeLocks();
         stopForeground(true);
     }
@@ -216,7 +222,10 @@ public class RadioService extends Service {
         } else if (intent.getStringExtra("action").equals(ACTION_NPAUSE)){
             PlayerState.CURRENTLY_PLAYING = false;
             createNotification();
-            sep.stop();
+
+            if(sep != null)
+                sep.stop();
+
             releaseWakeLocks();
             startForeground(1, notification);
             stopForeground(false);
@@ -232,9 +241,13 @@ public class RadioService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sep.stop();
-        sep.release();
-        sep = null;
+
+        if(sep != null) {
+            sep.stop();
+            sep.release();
+            sep = null;
+        }
+
         releaseWakeLocks();
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
         unregisterReceiver(receiver);
