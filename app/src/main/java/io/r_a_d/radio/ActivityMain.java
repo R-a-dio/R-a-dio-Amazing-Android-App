@@ -885,13 +885,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     private void playPlayerService() {
         Intent i = new Intent(this, RadioService.class);
-        i.putExtra("action", "io.r_a_d.radio.PLAY");
+        i.putExtra("action", RadioService.ACTION_PLAY);
         startService(i);
     }
 
     private void pausePlayerService() {
         Intent i = new Intent(this, RadioService.class);
-        i.putExtra("action", "io.r_a_d.radio.PAUSE");
+        i.putExtra("action", RadioService.ACTION_PAUSE);
         startService(i);
     }
 

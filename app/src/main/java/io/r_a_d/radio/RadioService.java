@@ -37,12 +37,13 @@ import com.google.android.exoplayer2.util.Util;
 
 public class RadioService extends Service {
 
-    private static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
-    private static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
+    public static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
+    public static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
     private static final String ACTION_NPAUSE = "io.r_a_d.radio.NPAUSE";
     private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
     private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
     private static final String CHANNEL_ID = "io.r_a_d.radio.NOTIFICATIONS";
+    private static final  String RADIO_URL = "https://stream.r-a-d.io/main.mp3";
 
 
 
@@ -90,6 +91,7 @@ public class RadioService extends Service {
                     }
                 }
             };
+
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -101,9 +103,6 @@ public class RadioService extends Service {
             }
         }
     };
-
-
-    private String radio_url = "https://stream.r-a-d.io/main.mp3";
 
     public RadioService() {
     }
@@ -145,7 +144,7 @@ public class RadioService extends Service {
         DataSource.Factory dsf = new DefaultDataSourceFactory(this,
                 Util.getUserAgent(this, "R/a/dio-Android-App"));
         ExtractorsFactory extractors = new DefaultExtractorsFactory();
-        MediaSource audioSource = new ExtractorMediaSource(Uri.parse(radio_url), dsf, extractors, null, null);
+        MediaSource audioSource = new ExtractorMediaSource(Uri.parse(RADIO_URL), dsf, extractors, null, null);
 
         if(sep != null)
             sep.prepare(audioSource);
@@ -194,6 +193,7 @@ public class RadioService extends Service {
 
         builder.addAction(action);
         notification = builder.build();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -237,7 +237,8 @@ public class RadioService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent == null || intent.getStringExtra("action") == null)return super.onStartCommand(intent, flags, startId);
+        if(intent == null || intent.getStringExtra("action") == null) return super.onStartCommand(intent, flags, startId);
+
         if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
             beginPlaying();
         } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)){
