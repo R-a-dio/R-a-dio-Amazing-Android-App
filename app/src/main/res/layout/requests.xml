@@ -65,14 +65,14 @@
         android:id="@+id/list_view_holder">
 
         <TextView
-            android:text="Use the bar to search!"
+            android:id="@+id/searchMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchMsg"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:text="Use the bar to search!"
             android:textAlignment="center"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"
-            android:layout_marginTop="5dp" />
+            android:textColor="@color/white" />
 
         <ListView
             android:layout_width="match_parent"

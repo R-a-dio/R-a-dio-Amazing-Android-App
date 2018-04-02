@@ -125,21 +125,23 @@
             android:id="@+id/dj_base">
 
             <TextView
-                android:text="You're listening to:"
-                android:layout_height="wrap_content"
                 android:id="@+id/ylt"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_horizontal"
+                android:text="You're listening to:"
+                android:textAlignment="center"
+                android:textAllCaps="false"
                 android:textColor="@color/dark"
                 android:textSize="18sp"
-                android:textStyle="normal|bold"
-                android:layout_width="240dp"
-                android:layout_marginTop="4dp"
-                android:textAlignment="center"
-                android:textAllCaps="false" />
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:id="@+id/dj_name"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:singleLine="true"
                 android:text="..."
                 android:textAlignment="center"
@@ -148,14 +150,14 @@
                 android:textStyle="normal|bold" />
 
             <TextView
-                android:text="Listeners: idklol"
-                android:layout_height="23dp"
                 android:id="@+id/listeners"
                 android:layout_width="240dp"
+                android:layout_height="23dp"
+                android:gravity="center_horizontal"
+                android:text="Listeners: idklol"
                 android:textAlignment="center"
-                android:textSize="12sp"
                 android:textColor="@color/dark"
-                android:gravity="center_vertical" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
