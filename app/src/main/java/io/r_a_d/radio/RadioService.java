@@ -1,6 +1,8 @@
 package io.r_a_d.radio;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -14,7 +16,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
@@ -39,6 +42,7 @@ public class RadioService extends Service {
     private static final String ACTION_NPAUSE = "io.r_a_d.radio.NPAUSE";
     private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
     private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
+    private static final String CHANNEL_ID = "io.r_a_d.radio.NOTIFICATIONS";
 
 
 
@@ -110,7 +114,7 @@ public class RadioService extends Service {
 
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KilimDankLock");
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
         createMediaPlayer();
 
@@ -152,27 +156,32 @@ public class RadioService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        String channelID = "";
 
-        /*RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        contentView.setImageViewResource(R.id.notification_image, R.drawable.normal_logo);
-        contentView.setTextViewText(R.id.notification_title, "My custom notification title");
-        contentView.setTextViewText(R.id.notification_text, "My custom notification text");
-        builder.setContent(contentView);*/
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channelID = createNotificationChannel();
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID);
         builder.setContentTitle("R/a/dio is streaming");
         builder.setContentText("Touch to return to app");
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setSmallIcon(R.drawable.lollipop_logo);
             builder.setColor(0xFFDF4C3A);
         } else {
             builder.setSmallIcon(R.drawable.normal_logo);
         }
+
         if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
+
         builder.setContentIntent(pendingIntent);
+
         Intent intent = new Intent(this, RadioService.class);
-       NotificationCompat.Action action;
+        NotificationCompat.Action action;
+
         if(PlayerState.CURRENTLY_PLAYING) {
             intent.putExtra("action", RadioService.ACTION_NPAUSE);
             PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -182,8 +191,22 @@ public class RadioService extends Service {
             PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_play, "Play", pendingButtonIntent).build();
         }
+
         builder.addAction(action);
         notification = builder.build();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String createNotificationChannel() {
+        String chanName = "R/a/dio Stream Service";
+
+        NotificationChannel chan = new NotificationChannel(CHANNEL_ID, chanName, NotificationManager.IMPORTANCE_MIN);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+        NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        service.createNotificationChannel(chan);
+
+        return CHANNEL_ID;
     }
 
     public void beginPlaying() {

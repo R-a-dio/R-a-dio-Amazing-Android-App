@@ -137,15 +137,15 @@
                 android:textAllCaps="false" />
 
             <TextView
+                android:id="@+id/dj_name"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/dj_name"
-                android:textSize="24sp"
-                android:textStyle="normal|bold"
-                android:textColor="@color/orange"
-                android:textAlignment="center"
                 android:singleLine="true"
-                android:text="..." />
+                android:text="..."
+                android:textAlignment="center"
+                android:textColor="@color/orange"
+                android:textSize="24sp"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:text="Listeners: idklol"
