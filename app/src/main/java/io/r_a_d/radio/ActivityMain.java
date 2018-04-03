@@ -114,11 +114,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void maybeUpdateBluetooth() {
-        String title = "";
-        String artist = "";
+        String title = PlayerState.getTitle();
+        String artist = PlayerState.getArtist();
         Integer length, position;
-        String np = PlayerState.NOW_PLAYING;
-        int hyphenPos = np.indexOf(" - ");
 
         synchronized (lock){
             if(songTimes.containsKey("length"))
@@ -130,16 +128,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 position = songTimes.get("position");
             else
                 position = 0;
-        }
-
-        if (hyphenPos == -1) {
-            title = np;
-        } else {
-            try {
-                title = URLDecoder.decode(np.substring(hyphenPos + 3), "UTF-8");
-                artist = URLDecoder.decode(np.substring(0, hyphenPos), "UTF-8");
-            } catch (Exception e) {
-            }
         }
 
         if (am.isBluetoothA2dpOn()) {
@@ -307,7 +295,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
             if(!np.getText().toString().equals(tags)) {
                 np.setText(tags);
-                PlayerState.NOW_PLAYING = tags;
+                PlayerState.setNowPlaying(tags);
+                updateNotificationTags();
+
                 synchronized (lock)
                 {
                     songTimes.put("start", song_start);
@@ -401,7 +391,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             // called after the JSON gets scraped everything the main activity is instantiated.
             // I don't know where else it could/should go.
             ImageButton img = (ImageButton)now_playing.findViewById(R.id.play_pause);
-            if(PlayerState.CURRENTLY_PLAYING){
+            if(PlayerState.isPlaying()){
                 img.setImageResource(R.drawable.pause_small);
             } else {
                 img.setImageResource(R.drawable.arrow_small);
@@ -821,7 +811,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 if(songChanged){
                     songChanged = false;
 
-                    if(PlayerState.CURRENTLY_PLAYING)
+                    if(PlayerState.isPlaying())
                         sendBluetoothMeta = true;
 
                     Integer length = end - start;
@@ -895,6 +885,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         startService(i);
     }
 
+    private void updateNotificationTags() {
+        Intent i = new Intent(this, RadioService.class);
+        i.putExtra("action", RadioService.ACTION_UPDATE_TAGS);
+        startService(i);
+    }
+
     private void setClipboard(View v) {
         String text = ((TextView) v).getText().toString();
         if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -910,7 +906,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void togglePlayPause(View v) {
         if(isDrawerVisible(findViewById(android.R.id.content))) return;
         ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
-        if(!PlayerState.CURRENTLY_PLAYING){
+        if(!PlayerState.isPlaying()){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
             sendBluetoothMeta = true;

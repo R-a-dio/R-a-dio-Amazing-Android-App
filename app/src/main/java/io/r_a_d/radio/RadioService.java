@@ -39,6 +39,7 @@ public class RadioService extends Service {
 
     public static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
     public static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
+    public static final String ACTION_UPDATE_TAGS = "io.r_a_d.radio.UPDATE_TAGS";
     private static final String ACTION_NPAUSE = "io.r_a_d.radio.NPAUSE";
     private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
     private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
@@ -55,6 +56,10 @@ public class RadioService extends Service {
     private Notification notification;
     private TelephonyManager mTelephonyManager;
     private AudioManager am;
+    private NotificationManager m_nm;
+    private NotificationCompat.Builder m_builder;
+    private float m_volume;
+    private boolean m_foreground;
 
     private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
         public void onCallStateChanged(int state, String incomingNumber) {
@@ -111,6 +116,9 @@ public class RadioService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        m_volume = 1.0f;
+        m_foreground = false;
+
         powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KilimDankLock");
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -118,6 +126,7 @@ public class RadioService extends Service {
         createMediaPlayer();
 
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        m_nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 
         mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -131,13 +140,15 @@ public class RadioService extends Service {
     }
 
     public void mutePlayer() {
-        if(sep != null)
+        if(sep != null) {
+            m_volume = sep.getVolume();
             sep.setVolume(0);
+        }
     }
 
     public void unmutePlayer() {
         if(sep != null)
-            sep.setVolume(1.0f);
+            sep.setVolume(m_volume);
     }
 
     public void setupMediaPlayer() {
@@ -161,39 +172,50 @@ public class RadioService extends Service {
             channelID = createNotificationChannel();
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID);
-        builder.setContentTitle("R/a/dio is streaming");
-        builder.setContentText("Touch to return to app");
+        m_builder = new NotificationCompat.Builder(this, channelID);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setSmallIcon(R.drawable.lollipop_logo);
-            builder.setColor(0xFFDF4C3A);
+            m_builder.setSmallIcon(R.drawable.lollipop_logo);
+            m_builder.setColor(0xFFDF4C3A);
         } else {
-            builder.setSmallIcon(R.drawable.normal_logo);
+            m_builder.setSmallIcon(R.drawable.normal_logo);
         }
 
-        if ( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            m_builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
 
-        builder.setContentIntent(pendingIntent);
+        m_builder.setContentIntent(pendingIntent);
+    }
 
-        Intent intent = new Intent(this, RadioService.class);
-        NotificationCompat.Action action;
-
-        if(PlayerState.CURRENTLY_PLAYING) {
-            intent.putExtra("action", RadioService.ACTION_NPAUSE);
-            PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_pause, "Pause", pendingButtonIntent).build();
-        } else {
-            intent.putExtra("action", RadioService.ACTION_PLAY);
-            PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_play, "Play", pendingButtonIntent).build();
+    private void updateNotification() {
+        if (m_builder == null) {
+            createNotification();
         }
 
-        builder.addAction(action);
-        notification = builder.build();
+        m_builder.setContentTitle(PlayerState.getTitle());
+        m_builder.setContentText(PlayerState.getArtist());
 
+        if (m_builder.mActions.isEmpty()) {
+            Intent intent = new Intent(this, RadioService.class);
+            NotificationCompat.Action action;
+
+            if (PlayerState.isPlaying()) {
+                intent.putExtra("action", RadioService.ACTION_NPAUSE);
+                PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_pause, "Pause", pendingButtonIntent).build();
+            } else {
+                intent.putExtra("action", RadioService.ACTION_PLAY);
+                PendingIntent pendingButtonIntent = PendingIntent.getService(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                action = new NotificationCompat.Action.Builder(R.drawable.exo_controls_play, "Play", pendingButtonIntent).build();
+            }
+
+            m_builder.addAction(action);
+        }
+
+        notification = m_builder.build();
+
+        m_nm.notify(1, notification);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -201,10 +223,9 @@ public class RadioService extends Service {
         String chanName = "R/a/dio Stream Service";
 
         NotificationChannel chan = new NotificationChannel(CHANNEL_ID, chanName, NotificationManager.IMPORTANCE_MIN);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
 
-        NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        service.createNotificationChannel(chan);
+        m_nm.createNotificationChannel(chan);
 
         return CHANNEL_ID;
     }
@@ -212,26 +233,34 @@ public class RadioService extends Service {
     public void beginPlaying() {
         int result = am.requestAudioFocus(focusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            PlayerState.CURRENTLY_PLAYING = true;
-            createNotification();
+            PlayerState.setPlayingStatus(true);
+            updateNotification();
             setupMediaPlayer();
 
             if(sep != null)
                 sep.setPlayWhenReady(true);
 
             acquireWakeLocks();
-            startForeground(1, notification);
+
+            if (!m_foreground) {
+                startForeground(1, notification);
+                m_foreground = true;
+            }
         }
     }
 
     public void stopPlaying () {
-        PlayerState.CURRENTLY_PLAYING = false;
+        PlayerState.setPlayingStatus(false);
 
         if(sep != null)
             sep.stop();
 
         releaseWakeLocks();
-        stopForeground(true);
+
+        if (m_foreground) {
+            stopForeground(true);
+            m_foreground = false;
+        }
     }
 
 
@@ -240,19 +269,25 @@ public class RadioService extends Service {
         if(intent == null || intent.getStringExtra("action") == null) return super.onStartCommand(intent, flags, startId);
 
         if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
+            if (m_foreground)
+                m_builder.mActions.clear();
+
             beginPlaying();
-        } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)){
+        } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)) {
+            m_builder.mActions.clear();
             stopPlaying();
+        } else if (intent.getStringExtra("action").equals(ACTION_UPDATE_TAGS)) {
+            if (m_foreground)
+                updateNotification();
         } else if (intent.getStringExtra("action").equals(ACTION_NPAUSE)){
-            PlayerState.CURRENTLY_PLAYING = false;
-            createNotification();
+            PlayerState.setPlayingStatus(false);
+            m_builder.mActions.clear();
+            updateNotification();
 
             if(sep != null)
                 sep.stop();
 
             releaseWakeLocks();
-            startForeground(1, notification);
-            stopForeground(false);
         } else if (intent.getStringExtra("action").equals(ACTION_MUTE)){
             mutePlayer();
         } else if (intent.getStringExtra("action").equals(ACTION_UNMUTE)){
@@ -279,7 +314,7 @@ public class RadioService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        if(!PlayerState.CURRENTLY_PLAYING) {
+        if(!PlayerState.isPlaying()) {
             stopSelf();
         }
         super.onTaskRemoved(rootIntent);
