@@ -37,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -77,13 +76,13 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.homescreen);
         songTimes = new HashMap<>();
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
         viewPager.setOffscreenPageLimit(3);
 
         viewPager.addOnPageChangeListener(this);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_dots);
+        TabLayout tabLayout = findViewById(R.id.tab_dots);
         tabLayout.setupWithViewPager(viewPager, true);
 
         scrapeNews(NEWS_API);
@@ -186,7 +185,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        TextView title_text = (TextView)findViewById(R.id.radio);
+        TextView title_text = findViewById(R.id.radio);
         View page = viewPager.getChildAt(position);
 
         View curView = getCurrentFocus();
@@ -240,42 +239,41 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void updateUI(){
         try {
             View now_playing = viewPager.getChildAt(0);
-            TextView lp4 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp4);
-            TextView lp3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp3);
-            TextView lp2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp2);
-            TextView lp1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp1);
-            TextView lp0 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.lp0);
-            TextView q1 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q1);
-            TextView q2 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q2);
-            TextView q3 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q3);
-            TextView q4 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q4);
-            TextView q5 = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.q5);
-            TextView threadtxt = (TextView)findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.thread);
+            View leftDrawer = findViewById(android.R.id.content).findViewById((R.id.left_drawer));
+
+            TextView lp4 = leftDrawer.findViewById(R.id.lp4);
+            TextView lp3 = leftDrawer.findViewById(R.id.lp3);
+            TextView lp2 = leftDrawer.findViewById(R.id.lp2);
+            TextView lp1 = leftDrawer.findViewById(R.id.lp1);
+            TextView lp0 = leftDrawer.findViewById(R.id.lp0);
+            TextView q1 = leftDrawer.findViewById(R.id.q1);
+            TextView q2 = leftDrawer.findViewById(R.id.q2);
+            TextView q3 = leftDrawer.findViewById(R.id.q3);
+            TextView q4 = leftDrawer.findViewById(R.id.q4);
+            TextView q5 = leftDrawer.findViewById(R.id.q5);
+            TextView threadtxt = leftDrawer.findViewById(R.id.thread);
+
             JSONObject djdata = new JSONObject(current_ui_json.getString("dj"));
             JSONArray queue_list = current_ui_json.getJSONArray("queue");
             JSONArray last_played_list = current_ui_json.getJSONArray("lp");
 
-            TextView np = (TextView)now_playing.findViewById(R.id.tags);
+            TextView np = now_playing.findViewById(R.id.tags);
             String tags = current_ui_json.getString("np");
 
             String threadurl = current_ui_json.getString("thread");
 
 
-            TextView ls = (TextView)now_playing.findViewById(R.id.listeners);
+            TextView ls = now_playing.findViewById(R.id.listeners);
             String listeners = current_ui_json.getString("listeners");
 
-            TextView dj_name = (TextView)now_playing.findViewById(R.id.dj_name);
+            TextView dj_name = now_playing.findViewById(R.id.dj_name);
             String djname = djdata.getString("djname");
 
             Integer song_start = current_ui_json.getInt("start_time");
             Integer song_end = current_ui_json.getInt("end_time");
             Integer song_length_position = current_ui_json.getInt("current") - song_start;
 
-
-            //String[] djcolor = djdata.getString("djcolor").split(" ");
-            //Integer djhex = Color.rgb(Integer.valueOf(djcolor[0]), Integer.valueOf(djcolor[1]), Integer.valueOf(djcolor[2]));
-
-            TextView nextsong = (TextView)now_playing.findViewById(R.id.nextsong);
+            TextView nextsong = now_playing.findViewById(R.id.nextsong);
             String ns = queue_list.getJSONObject(0).getString("meta");
 
             String djimgid = djdata.getString("djimage");
@@ -356,6 +354,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 q3.setText("");
                 q4.setText("");
                 q5.setText("");
+
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view1).setVisibility(View.INVISIBLE);
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view2).setVisibility(View.INVISIBLE);
                 findViewById(android.R.id.content).findViewById((R.id.left_drawer)).findViewById(R.id.hide_view3).setVisibility(View.INVISIBLE);
@@ -369,14 +368,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 np.setMaxLines(1);
                 np.setSelected(true);
             }
-            //pb.setProgress(song_length_position);
 
             ls.setText("Listeners: " + listeners);
 
 
             if(!dj_name.getText().toString().equals(djname))
                 dj_name.setText(djname);
-            //dj_name.setTextColor(djhex);
 
             if(!nextsong.getText().toString().equals(ns)) {
                 if (current_ui_json.getBoolean("isafkstream")) {
@@ -390,7 +387,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             // Fix for syncing play/pause button by taking advantage of the fact that this code gets
             // called after the JSON gets scraped everything the main activity is instantiated.
             // I don't know where else it could/should go.
-            ImageButton img = (ImageButton)now_playing.findViewById(R.id.play_pause);
+            ImageButton img = now_playing.findViewById(R.id.play_pause);
             if(PlayerState.isPlaying()){
                 img.setImageResource(R.drawable.pause_small);
             } else {
@@ -453,10 +450,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     public void clearSearchClick(View clearSearchButton) {
         View requestView = viewPager.findViewById(R.id.requests_page);
 
-        EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
+        EditText queryEditor = requestView.findViewById(R.id.searchquery);
         queryEditor.setText("");
 
-        ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
+        ListView songListView = requestView.findViewById(R.id.songListView);
         ArrayList<Song> emptyList = new ArrayList<>();
         songListView.removeFooterView(searchFooter);
         songListView.setAdapter(new SongAdapter(this, R.layout.request_cell, emptyList));
@@ -465,8 +462,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private void performSearch(Integer pageNumber){
         View curView = getCurrentFocus();
         View requestView = viewPager.findViewById(R.id.requests_page);
-        EditText queryEditor = (EditText) requestView.findViewById(R.id.searchquery);
-        TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
+        EditText queryEditor = requestView.findViewById(R.id.searchquery);
+        TextView searchMsg = requestView.findViewById(R.id.searchMsg);
         String query = queryEditor.getText().toString().trim();
         searchMsg.setVisibility(View.VISIBLE);
         if(query.equals("")) {
@@ -485,8 +482,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     public void setSongList(String json) throws JSONException{
         View requestView = viewPager.findViewById(R.id.requests_page);
-        TextView searchMsg = (TextView) requestView.findViewById(R.id.searchMsg);
-        ListView songListView = (ListView) requestView.findViewById(R.id.songListView);
+        TextView searchMsg = requestView.findViewById(R.id.searchMsg);
+        ListView songListView = requestView.findViewById(R.id.songListView);
         Integer curPage, lastPage;
 
         try {
@@ -540,14 +537,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view = this.getLayoutInflater().inflate(R.layout.page_buttons, null);
 
         if(curPage <= 5) {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+            Button searchPageButton = view.findViewById(R.id.searchB1);
 
             searchPageButton.setTextColor(getResources().getColor(R.color.rblue));
             searchPageButton.setEnabled(true);
             searchPageButton.setVisibility(View.VISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+            Button searchPageButton = view.findViewById(R.id.searchB1);
 
             searchPageButton.setText(R.string.dots);
             searchPageButton.setTextColor(getResources().getColor(R.color.whited2));
@@ -558,7 +555,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchFirstPage).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchFirstPage);
+            Button searchPageButton = view.findViewById(R.id.searchFirstPage);
 
             searchPageButton.setVisibility(View.VISIBLE);
             searchPageButton.setOnClickListener(new View.OnClickListener() {
@@ -573,7 +570,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB1).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB1);
+            Button searchPageButton = view.findViewById(R.id.searchB1);
             Integer num = curPage - 3;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -593,7 +590,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB2).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB2);
+            Button searchPageButton = view.findViewById(R.id.searchB2);
             Integer num = curPage - 2;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -610,7 +607,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB3).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB3);
+            Button searchPageButton = view.findViewById(R.id.searchB3);
             Integer num = curPage - 1;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -624,14 +621,14 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         }
 
         if(curPage >= (lastPage - 4)) {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+            Button searchPageButton = view.findViewById(R.id.searchB7);
 
             searchPageButton.setTextColor(getResources().getColor(R.color.rblue));
             searchPageButton.setEnabled(true);
             searchPageButton.setVisibility(View.VISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+            Button searchPageButton = view.findViewById(R.id.searchB7);
 
             searchPageButton.setText(R.string.dots);
             searchPageButton.setTextColor(getResources().getColor(R.color.whited2));
@@ -642,7 +639,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchLastPage).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchLastPage);
+            Button searchPageButton = view.findViewById(R.id.searchLastPage);
 
             searchPageButton.setVisibility(View.VISIBLE);
             searchPageButton.setText(lastPage.toString());
@@ -658,7 +655,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB7).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB7);
+            Button searchPageButton = view.findViewById(R.id.searchB7);
             Integer num = curPage + 3;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -678,7 +675,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB6).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB6);
+            Button searchPageButton = view.findViewById(R.id.searchB6);
             Integer num = curPage + 2;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -695,7 +692,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             view.findViewById(R.id.searchB5).setVisibility(View.INVISIBLE);
         }
         else {
-            Button searchPageButton = (Button) view.findViewById(R.id.searchB5);
+            Button searchPageButton = view.findViewById(R.id.searchB5);
             Integer num = curPage + 1;
 
             searchPageButton.setVisibility(View.VISIBLE);
@@ -717,15 +714,15 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         View news_view = viewPager.getChildAt(2);
 
         if(news_view != null) {
-            TextView newst1 = (TextView) news_view.findViewById(R.id.news_title1);
-            TextView newst2 = (TextView) news_view.findViewById(R.id.news_title2);
-            TextView newst3 = (TextView) news_view.findViewById(R.id.news_title3);
+            TextView newst1 = news_view.findViewById(R.id.news_title1);
+            TextView newst2 = news_view.findViewById(R.id.news_title2);
+            TextView newst3 = news_view.findViewById(R.id.news_title3);
             newst1.setText(newsjson.getJSONObject(0).getString("title"));
             newst2.setText(newsjson.getJSONObject(1).getString("title"));
             newst3.setText(newsjson.getJSONObject(2).getString("title"));
-            TextView news1 = (TextView) news_view.findViewById(R.id.news1);
-            TextView news2 = (TextView) news_view.findViewById(R.id.news2);
-            TextView news3 = (TextView) news_view.findViewById(R.id.news3);
+            TextView news1 = news_view.findViewById(R.id.news1);
+            TextView news2 = news_view.findViewById(R.id.news2);
+            TextView news3 = news_view.findViewById(R.id.news3);
             news1.setText(Html.fromHtml((newsjson.getJSONObject(0).getString("text"))));
             news1.setMovementMethod(LinkMovementMethod.getInstance());
             news2.setText(Html.fromHtml((newsjson.getJSONObject(1).getString("text"))));
@@ -743,7 +740,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     public void setDJImage(RoundedBitmapDrawable djimage) {
-        ImageView djavatar = (ImageView)viewPager.getChildAt(0).findViewById(R.id.dj_avatar);
+        ImageView djavatar = viewPager.getChildAt(0).findViewById(R.id.dj_avatar);
         djavatar.setImageDrawable(djimage);
     }
 
@@ -756,9 +753,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         View now_playing = viewPager.getChildAt(0);
 
         if(now_playing != null) {
-            ProgressBar pb = (ProgressBar) now_playing.findViewById(R.id.progressBar3);
-            TextView te = (TextView) now_playing.findViewById(R.id.time_elapsed);
-            TextView tt = (TextView) now_playing.findViewById(R.id.total_time);
+            ProgressBar pb = now_playing.findViewById(R.id.progressBar3);
+            TextView te = now_playing.findViewById(R.id.time_elapsed);
+            TextView tt = now_playing.findViewById(R.id.total_time);
 
             if (values.containsKey("length")) {
                 pb.setProgress(0);
@@ -856,20 +853,19 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         Rect scrollBounds = new Rect();
         view.getHitRect(scrollBounds);
-        if (view.findViewById(R.id.drawer_layout).findViewById(R.id.left_drawer).getLocalVisibleRect(scrollBounds)) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return view.findViewById(R.id.drawer_layout)
+                .findViewById(R.id.left_drawer)
+                .getLocalVisibleRect(scrollBounds);
     }
 
     public void openSideDrawer(View v) {
-        DrawerLayout dl = (DrawerLayout)findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
+        DrawerLayout dl = findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
         dl.openDrawer(dl.findViewById(R.id.left_drawer));
     }
 
     public void closeSideDrawer() {
-        DrawerLayout dl = (DrawerLayout)findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
+        DrawerLayout dl = findViewById(android.R.id.content).findViewById(R.id.drawer_layout);
         dl.closeDrawer(dl.findViewById(R.id.left_drawer));
     }
 
@@ -893,19 +889,15 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     private void setClipboard(View v) {
         String text = ((TextView) v).getText().toString();
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(text);
-        } else {
-            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
-            clipboard.setPrimaryClip(clip);
-        }
+
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+        clipboard.setPrimaryClip(clip);
     }
 
     public void togglePlayPause(View v) {
         if(isDrawerVisible(findViewById(android.R.id.content))) return;
-        ImageButton img = (ImageButton)v.findViewById(R.id.play_pause);
+        ImageButton img = v.findViewById(R.id.play_pause);
         if(!PlayerState.isPlaying()){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();

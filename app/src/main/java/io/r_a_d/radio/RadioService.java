@@ -22,18 +22,14 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 public class RadioService extends Service {
 
@@ -101,7 +97,7 @@ public class RadioService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)/* || (action.equals(AudioManager.ACTION_HEADSET_PLUG) && (intent.getIntExtra("state", 0) == 0))*/) {
+            if(action.equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
                 Intent i = new Intent(context, RadioService.class);
                 i.putExtra("action", "io.r_a_d.radio.PAUSE");
                 context.startService(i);
@@ -152,10 +148,10 @@ public class RadioService extends Service {
     }
 
     public void setupMediaPlayer() {
-        DataSource.Factory dsf = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "R/a/dio-Android-App"));
-        ExtractorsFactory extractors = new DefaultExtractorsFactory();
-        MediaSource audioSource = new ExtractorMediaSource(Uri.parse(RADIO_URL), dsf, extractors, null, null);
+        DataSource.Factory dsf = new DefaultHttpDataSourceFactory("R/a/dio-Android-App");
+
+        MediaSource audioSource = new ExtractorMediaSource.Factory(dsf)
+                .createMediaSource(Uri.parse(RADIO_URL));
 
         if(sep != null)
             sep.prepare(audioSource);
@@ -337,8 +333,8 @@ public class RadioService extends Service {
     }
 
     public void createMediaPlayer() {
-        TrackSelector tSelector = new DefaultTrackSelector();
-        LoadControl lc = new DefaultLoadControl();
-        sep = ExoPlayerFactory.newSimpleInstance(this, tSelector, lc);
+        sep = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this),
+                new DefaultTrackSelector(),
+                new DefaultLoadControl());
     }
 }
