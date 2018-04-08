@@ -939,13 +939,17 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void bindToService() {
-        Intent i = new Intent(this, RadioService.class);
-        bindService(i, m_connection, BIND_AUTO_CREATE);
+        if (!m_bound) {
+            Intent i = new Intent(this, RadioService.class);
+            bindService(i, m_connection, BIND_AUTO_CREATE);
+        }
     }
 
     private void unbindFromService() {
-        unbindService(m_connection);
-        m_bound = false;
+        if (m_bound) {
+            unbindService(m_connection);
+            m_bound = false;
+        }
     }
 
     private ServiceConnection m_connection = new ServiceConnection() {
