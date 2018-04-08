@@ -1,11 +1,14 @@
 package io.r_a_d.radio;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
@@ -39,6 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -57,17 +61,19 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private boolean firstSearchClick = true;
     private boolean sendBluetoothMeta = false;
     private boolean newsSet = false;
+    private boolean m_bound = false;
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
     private DJImageTask djimageTask = new DJImageTask(this);
     private String current_dj_image;
-    public JSONObject current_ui_json;
+    private JSONObject current_ui_json;
     private ScheduledExecutorService scheduledTaskExecutor;
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
     private View searchFooter;
     private AudioManager am;
     private MediaSessionCompat mMediaSession;
+    private RadioService m_service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +116,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         mMediaSession = new MediaSessionCompat(this, "RadioMediaSession");
         mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mMediaSession.setActive(true);
+
+        if (PlayerState.isServiceStarted())
+            bindToService();
     }
 
     private void maybeUpdateBluetooth() {
@@ -174,9 +183,11 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         super.onDestroy();
 
         scheduledTaskExecutor.shutdownNow();
+        unbindFromService();
 
         mMediaSession.release();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -192,7 +203,9 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(curView != null)
         {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
+            }
         }
 
         int pageID = R.id.now_playing_page;
@@ -216,14 +229,10 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        return;
-    }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-        return;
-    }
+    public void onPageScrollStateChanged(int state) { }
 
     public void openThread(View v) {
         try {
@@ -472,10 +481,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             searchMsg.setText("Searching...");
             if (curView != null) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(curView.getWindowToken(), 0);
+                }
             }
 
-            String searchURL = String.format(SEARCH_API, query, pageNumber);
+            String searchURL = String.format(Locale.getDefault(), SEARCH_API, query, pageNumber);
             new JSONScraperTask(this, 2).execute(searchURL);
         }
     }
@@ -870,21 +881,30 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void playPlayerService() {
-        Intent i = new Intent(this, RadioService.class);
-        i.putExtra("action", RadioService.ACTION_PLAY);
-        startService(i);
+        if (PlayerState.isServiceStarted() && m_bound) {
+            m_service.beginPlaying();
+        }
+        else {
+            Intent i = new Intent(this, RadioService.class);
+            i.putExtra("action", RadioService.ACTION_PLAY);
+            startService(i);
+        }
     }
 
     private void pausePlayerService() {
-        Intent i = new Intent(this, RadioService.class);
-        i.putExtra("action", RadioService.ACTION_PAUSE);
-        startService(i);
+        if (PlayerState.isServiceStarted() && m_bound) {
+            m_service.stopPlaying();
+        }
+        else {
+            Intent i = new Intent(this, RadioService.class);
+            i.putExtra("action", RadioService.ACTION_PAUSE);
+            startService(i);
+        }
     }
 
     private void updateNotificationTags() {
-        Intent i = new Intent(this, RadioService.class);
-        i.putExtra("action", RadioService.ACTION_UPDATE_TAGS);
-        startService(i);
+        if (PlayerState.isServiceStarted() && m_bound && m_service.isForeground())
+            m_service.updateTags();
     }
 
     private void setClipboard(View v) {
@@ -892,20 +912,53 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
-        clipboard.setPrimaryClip(clip);
+        if (clipboard != null)
+            clipboard.setPrimaryClip(clip);
     }
 
     public void togglePlayPause(View v) {
         if(isDrawerVisible(findViewById(android.R.id.content))) return;
+
         ImageButton img = v.findViewById(R.id.play_pause);
+
         if(!PlayerState.isPlaying()){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
             sendBluetoothMeta = true;
+
+            if(!m_bound)
+                bindToService();
         } else {
             img.setImageResource(R.drawable.arrow_small);
             pausePlayerService();
             sendBluetoothMeta = false;
+
+            if (m_bound)
+                unbindFromService();
         }
     }
+
+    private void bindToService() {
+        Intent i = new Intent(this, RadioService.class);
+        bindService(i, m_connection, BIND_AUTO_CREATE);
+    }
+
+    private void unbindFromService() {
+        unbindService(m_connection);
+        m_bound = false;
+    }
+
+    private ServiceConnection m_connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            RadioService.RadioBinder binder = (RadioService.RadioBinder) service;
+            m_service = binder.getService();
+            m_bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            m_bound = false;
+        }
+    };
 }

@@ -11,11 +11,14 @@ import java.net.URLDecoder;
 
 public final class PlayerState {
     private static boolean m_playing = false;
+    private static boolean m_serivceStarted = false;
     private static String m_artist = "";
     private static String m_title = "";
 
     public static boolean isPlaying() { return m_playing; }
     public static void setPlayingStatus(boolean status) { m_playing = status; }
+    public static boolean isServiceStarted() { return m_serivceStarted; }
+    public static void setServiceStatus(boolean status) { m_serivceStarted = status; }
     public static String getArtist() { return m_artist; }
     public static String getTitle() { return m_title; }
 
