@@ -5,17 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +54,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
     private boolean songChanged = false;
     private boolean firstSearchClick = true;
-    private boolean sendBluetoothMeta = false;
     private boolean newsSet = false;
     private boolean m_bound = false;
     private ViewPager viewPager;
@@ -71,8 +65,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private HashMap<String, Integer> songTimes;
     private Requestor mRequestor;
     private View searchFooter;
-    private AudioManager am;
-    private MediaSessionCompat mMediaSession;
     private RadioService m_service;
 
     @Override
@@ -110,58 +102,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         mRequestor = new Requestor(this);
 
-        am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
-        // This stuff is for allowing bluetooth tags
-        mMediaSession = new MediaSessionCompat(this, "RadioMediaSession");
-        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mMediaSession.setActive(true);
-
         if (PlayerState.isServiceStarted())
             bindToService();
-    }
-
-    private void maybeUpdateBluetooth() {
-        String title = PlayerState.getTitle();
-        String artist = PlayerState.getArtist();
-        Integer length, position;
-
-        synchronized (lock){
-            if(songTimes.containsKey("length"))
-                length = songTimes.get("length");
-            else
-                length = 0;
-
-            if(songTimes.containsKey("position"))
-                position = songTimes.get("position");
-            else
-                position = 0;
-        }
-
-        if (am.isBluetoothA2dpOn()) {
-            MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
-                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
-                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, artist)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, length)
-                    .build();
-
-            mMediaSession.setMetadata(metadata);
-
-            PlaybackStateCompat state = new PlaybackStateCompat.Builder()
-                    .setActions(PlaybackStateCompat.ACTION_PLAY)
-                    .setState(PlaybackStateCompat.STATE_PLAYING, position, 1.0f, SystemClock.elapsedRealtime())
-                    .build();
-
-            mMediaSession.setPlaybackState(state);
-        }
-
-        Intent i = new Intent("com.android.music.metachanged");
-        i.putExtra("artist", artist);
-        i.putExtra("track", title);
-        i.putExtra("duration", length);
-        i.putExtra("position", position);
-        sendBroadcast(i);
     }
 
 
@@ -184,8 +126,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         scheduledTaskExecutor.shutdownNow();
         unbindFromService();
-
-        mMediaSession.release();
     }
 
     @Override
@@ -819,9 +759,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 if(songChanged){
                     songChanged = false;
 
-                    if(PlayerState.isPlaying())
-                        sendBluetoothMeta = true;
-
                     Integer length = end - start;
                     Integer totalMinutes = length / 60;
                     Integer totalSeconds = length % 60;
@@ -843,12 +780,6 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
             songVals.put("position", position);
             songVals.put("elapsedMinutes", (position / 1000) / 60);
             songVals.put("elapsedSeconds", (position / 1000) % 60);
-
-            // Bluetooth Tag?
-            if(sendBluetoothMeta){
-                sendBluetoothMeta = false;
-                maybeUpdateBluetooth();
-            }
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -924,14 +855,12 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         if(!PlayerState.isPlaying()){
             img.setImageResource(R.drawable.pause_small);
             playPlayerService();
-            sendBluetoothMeta = true;
 
             if(!m_bound)
                 bindToService();
         } else {
             img.setImageResource(R.drawable.arrow_small);
             pausePlayerService();
-            sendBluetoothMeta = false;
 
             if (m_bound)
                 unbindFromService();

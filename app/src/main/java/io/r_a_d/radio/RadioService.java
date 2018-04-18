@@ -17,8 +17,13 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaButtonReceiver;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 
@@ -53,6 +58,9 @@ public class RadioService extends Service {
     private NotificationCompat.Builder m_builder;
     private float m_volume;
     private boolean m_foreground;
+    private MediaSessionCompat m_mediaSession;
+    private PlaybackStateCompat.Builder m_pbsBuilder;
+    private MediaMetadataCompat.Builder m_metaBuilder;
 
     private final IBinder m_binder = new RadioBinder();
 
@@ -122,6 +130,7 @@ public class RadioService extends Service {
             wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "KilimDankWifiLock");
 
         createMediaPlayer();
+        createMediaSession();
 
         am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         m_nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -137,6 +146,21 @@ public class RadioService extends Service {
         registerReceiver(receiver, filter);
 
         PlayerState.setServiceStatus(true);
+    }
+
+    private void createMediaSession()
+    {
+        m_mediaSession = new MediaSessionCompat(this, "RadioMediaSession");
+        m_mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS & MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+        m_mediaSession.setActive(true);
+        m_mediaSession.setCallback(m_msCallback);
+
+        m_pbsBuilder = new PlaybackStateCompat.Builder();
+        m_pbsBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
+            .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f, SystemClock.elapsedRealtime());
+
+        m_metaBuilder = new MediaMetadataCompat.Builder();
+        m_mediaSession.setPlaybackState(m_pbsBuilder.build());
     }
 
     private void mutePlayer() {
@@ -185,7 +209,9 @@ public class RadioService extends Service {
             m_builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
 
-        m_builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(0));
+        m_builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(m_mediaSession.getSessionToken())
+                .setShowActionsInCompactView(0));
 
         m_builder.setContentIntent(pendingIntent);
     }
@@ -252,6 +278,11 @@ public class RadioService extends Service {
                 startForeground(1, notification);
                 m_foreground = true;
             }
+
+            updateTags();
+
+            m_pbsBuilder.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f, SystemClock.elapsedRealtime());
+            m_mediaSession.setPlaybackState(m_pbsBuilder.build());
         }
     }
 
@@ -267,6 +298,9 @@ public class RadioService extends Service {
             m_builder.mActions.clear();
             stopForeground(true);
             m_foreground = false;
+
+            m_pbsBuilder.setState(PlaybackStateCompat.STATE_STOPPED, 0, 1.0f, SystemClock.elapsedRealtime());
+            m_mediaSession.setPlaybackState(m_pbsBuilder.build());
         }
     }
 
@@ -274,6 +308,8 @@ public class RadioService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent == null || intent.getStringExtra("action") == null) return super.onStartCommand(intent, flags, startId);
+
+        if (MediaButtonReceiver.handleIntent(m_mediaSession, intent) != null) return super.onStartCommand(intent, flags, startId);
 
         if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
             beginPlaying();
@@ -290,6 +326,9 @@ public class RadioService extends Service {
                 sep.stop();
 
             releaseWakeLocks();
+
+            m_pbsBuilder.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1.0f, SystemClock.elapsedRealtime());
+            m_mediaSession.setPlaybackState(m_pbsBuilder.build());
         } else if (intent.getStringExtra("action").equals(ACTION_MUTE)){
             mutePlayer();
         } else if (intent.getStringExtra("action").equals(ACTION_UNMUTE)){
@@ -312,6 +351,7 @@ public class RadioService extends Service {
         releaseWakeLocks();
         mTelephonyManager.listen(mPhoneListener, PhoneStateListener.LISTEN_NONE);
         unregisterReceiver(receiver);
+        m_mediaSession.release();
         PlayerState.setServiceStatus(false);
     }
 
@@ -346,8 +386,22 @@ public class RadioService extends Service {
     }
 
     public void updateTags() {
-        if (m_foreground)
+        if (m_foreground) {
             updateNotification();
+
+            m_metaBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, PlayerState.getTitle())
+                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, PlayerState.getArtist())
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0);
+
+            m_mediaSession.setMetadata(m_metaBuilder.build());
+
+            Intent i = new Intent("com.android.music.metachanged");
+            i.putExtra("artist", PlayerState.getArtist());
+            i.putExtra("track", PlayerState.getTitle());
+            i.putExtra("duration", 0);
+            i.putExtra("position", 0);
+            sendBroadcast(i);
+        }
     }
 
     public boolean isForeground() {
@@ -359,4 +413,21 @@ public class RadioService extends Service {
             return RadioService.this;
         }
     }
+
+    private MediaSessionCompat.Callback m_msCallback = new MediaSessionCompat.Callback() {
+        @Override
+        public void onPlay() {
+            beginPlaying();
+        }
+
+        @Override
+        public void onPause() {
+            stopPlaying();
+        }
+
+        @Override
+        public void onStop() {
+            stopPlaying();
+        }
+    };
 }
