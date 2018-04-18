@@ -6,9 +6,9 @@ android {
         applicationId "io.r_a_d.radio"
         minSdkVersion 16
         targetSdkVersion 27
-        versionName '1.2.1.1'
+        versionName '1.2.1.2'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 8
+        versionCode 9
     }
     buildTypes {
         release {
