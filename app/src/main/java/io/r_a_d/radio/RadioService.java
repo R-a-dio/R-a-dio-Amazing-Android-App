@@ -114,9 +114,6 @@ public class RadioService extends Service {
         }
     };
 
-    public RadioService() {
-    }
-
     @Override
     public void onCreate() {
         m_volume = 1.0f;
