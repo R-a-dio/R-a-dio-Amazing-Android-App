@@ -206,7 +206,6 @@ public class RadioService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(String parentMediaId, Result<List<MediaBrowserCompat.MediaItem>> result) {
         result.sendResult(null);
-        return;
     }
 
     private void createMediaSession()
