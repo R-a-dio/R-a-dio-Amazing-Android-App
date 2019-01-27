@@ -1,14 +1,16 @@
 package io.r_a_d.radio;
 
 /**
+ * Metadata for each song
+ *
  * Created by Kethsar on 1/2/2017.
  */
 
 public class Song {
     private String mArtistName;
     private String mSongTitle;
-    private boolean mRequestable;
-    private Integer mSongID;
+    private boolean mRequestable; // Requestable depends on cooldowns
+    private Integer mSongID; // The id is unique to the database
 
     public Song() {}
 

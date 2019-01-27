@@ -3,6 +3,10 @@ package io.r_a_d.radio;
 import java.net.URLDecoder;
 
 /**
+ * Global player state for the app
+ *
+ * Used for synchronizing the state between the Activity and the Service
+ *
  * Created by resttime on 1/3/2017.
  *
  * 2018/04/02, Kethsar: Properly use getters and setters rather than public variables

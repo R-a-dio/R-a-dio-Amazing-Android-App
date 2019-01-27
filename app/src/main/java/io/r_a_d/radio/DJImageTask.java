@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * Grabs the DJ image and also updates the UI with it
+ */
 class DJImageTask extends AsyncTask<String, Void, RoundedBitmapDrawable> {
 
     private ActivityMain activity;
@@ -16,6 +19,12 @@ class DJImageTask extends AsyncTask<String, Void, RoundedBitmapDrawable> {
         this.activity = activity;
     }
 
+    /**
+     * Grab the image for the current DJ
+     *
+     * @param urlToScrape
+     * @return
+     */
     @Override
     protected RoundedBitmapDrawable doInBackground(String... urlToScrape) {
         InputStream is = null;
@@ -30,6 +39,11 @@ class DJImageTask extends AsyncTask<String, Void, RoundedBitmapDrawable> {
         return roundDrawable;
     }
 
+    /**
+     * Set the DJ image on the UI
+     *
+     * @param image
+     */
     @Override
     protected void onPostExecute(RoundedBitmapDrawable image) {
         activity.setDJImage(image);

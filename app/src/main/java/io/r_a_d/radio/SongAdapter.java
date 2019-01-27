@@ -12,6 +12,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
+ * Implements the layout where a list of songs can be requested is displayed
+ *
  * Created by Kethsar on 1/2/2017.
  */
 

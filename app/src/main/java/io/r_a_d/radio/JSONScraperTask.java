@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * API scraper which also updates the UI depending on what the parameter at construction
+ */
 class JSONScraperTask extends AsyncTask<String, Void, String> {
 
     private URL api_url_scraper;
@@ -22,6 +25,12 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
         this.uitocall = methodtocall;
     }
 
+    /**
+     * Read in the json from the api
+     *
+     * @param urlToScrape
+     * @return json string of the api
+     */
     @Override
     protected String doInBackground(String... urlToScrape) {
         BufferedReader reader = null;
@@ -44,6 +53,11 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
         return builder.toString();
     }
 
+    /**
+     * Update the UI after we successfully have the api information
+     *
+     * @param json Grabbed from the REST api
+     */
     @Override
     protected void onPostExecute(String json) {
         try {

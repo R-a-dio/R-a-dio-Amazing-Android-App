@@ -20,6 +20,11 @@ import java.util.regex.Pattern;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
+ * Requests a song via the website's API
+ *
+ * We scrape the website for a CSRF token and POST it to /request/ endpoint with
+ * the song id
+ *
  * Created by Kethsar on 1/2/2017.
  */
 
@@ -54,6 +59,9 @@ public class Requestor {
         new RequestTask(this, mActivity).execute(request);
     }
 
+    /**
+     * Scrape the website for the CSRF token required for requesting
+     */
     protected class CookieTask extends AsyncTask<CookieManager, Void, String>{
         private final String RADIO_SEARCH = "https://r-a-d.io/search";
         private Requestor mRequestor;
@@ -107,6 +115,9 @@ public class Requestor {
         }
     }
 
+    /**
+     * Request the song with the CSRF token that was scraped
+     */
     protected class RequestTask extends AsyncTask<String, Void, String> {
         private ActivityMain mActivity;
         private Requestor mRequestor;
