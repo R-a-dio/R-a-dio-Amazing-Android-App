@@ -28,7 +28,10 @@
         <service
             android:name="io.r_a_d.radio.RadioService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
         </service>
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
             <intent-filter>

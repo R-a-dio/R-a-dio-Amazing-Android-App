@@ -15,17 +15,22 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -37,8 +42,10 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
-public class RadioService extends Service {
+import java.util.ArrayList;
+import java.util.List;
 
+public class RadioService extends MediaBrowserServiceCompat {
     public static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
     public static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
     public static final String ACTION_UPDATE_TAGS = "io.r_a_d.radio.UPDATE_TAGS";
@@ -48,6 +55,8 @@ public class RadioService extends Service {
     private static final String CHANNEL_ID = "io.r_a_d.radio.NOTIFICATIONS";
     private static final String RADIO_URL = "https://stream.r-a-d.io/main.mp3";
 
+    // Define the media root id for the MediaBrowser stuff
+    private static final String MEDIA_ROOT_ID = "radio_root_id";
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
     private SimpleExoPlayer sep;
@@ -144,6 +153,33 @@ public class RadioService extends Service {
         registerReceiver(receiver, filter);
 
         PlayerState.setServiceStatus(true);
+    }
+
+    /**
+     * Disable ability to browse for content, we can't browse internet radio
+     *
+     * @param clientPackageName
+     * @param clientUid
+     * @param rootHints
+     * @return
+     */
+    @Override
+    public BrowserRoot onGetRoot(String clientPackageName, int clientUid, Bundle rootHints) {
+        // Clients can connect, but you can't browse internet radio
+        // so onLoadChildren returns nothing. This disables the ability to browse for content.
+        return new BrowserRoot(MEDIA_ROOT_ID, null);
+    }
+
+    /**
+     * For MediaBrowser clients send nothing, we can't browse internet radio
+     *
+     * @param parentMediaId
+     * @param result
+     */
+    @Override
+    public void onLoadChildren(String parentMediaId, Result<List<MediaBrowserCompat.MediaItem>> result) {
+        result.sendResult(null);
+        return;
     }
 
     private void createMediaSession()
