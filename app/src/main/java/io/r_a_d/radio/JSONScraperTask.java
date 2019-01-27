@@ -44,6 +44,7 @@ class JSONScraperTask extends AsyncTask<String, Void, String> {
         return builder.toString();
     }
 
+    @Override
     protected void onPostExecute(String json) {
         try {
             switch (uitocall){

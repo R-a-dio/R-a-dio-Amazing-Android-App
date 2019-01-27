@@ -78,6 +78,7 @@ public class RadioService extends Service {
 
     private AudioManager.OnAudioFocusChangeListener focusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
+                @Override
                 public void onAudioFocusChange(int focusChange) {
                     switch (focusChange) {
 

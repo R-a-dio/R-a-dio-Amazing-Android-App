@@ -88,6 +88,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
         scheduledTaskExecutor = Executors.newSingleThreadScheduledExecutor();
 
         scheduledTaskExecutor.scheduleWithFixedDelay(new Runnable(){
+            @Override
             public void run(){
                 scrapeJSON(MAIN_API);
             }

@@ -30,7 +30,7 @@ class DJImageTask extends AsyncTask<String, Void, RoundedBitmapDrawable> {
         return roundDrawable;
     }
 
-
+    @Override
     protected void onPostExecute(RoundedBitmapDrawable image) {
         activity.setDJImage(image);
     }
