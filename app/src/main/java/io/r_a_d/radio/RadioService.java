@@ -312,28 +312,35 @@ public class RadioService extends Service {
 
         if (MediaButtonReceiver.handleIntent(m_mediaSession, intent) != null) return super.onStartCommand(intent, flags, startId);
 
-        if (intent.getStringExtra("action").equals(ACTION_PLAY)) {
-            beginPlaying();
-        } else if (intent.getStringExtra("action").equals(ACTION_PAUSE)) {
-            stopPlaying();
-        } else if (intent.getStringExtra("action").equals(ACTION_UPDATE_TAGS)) {
-            updateTags();
-        } else if (intent.getStringExtra("action").equals(ACTION_NPAUSE)){
-            PlayerState.setPlayingStatus(false);
-            m_builder.mActions.clear();
-            updateNotification();
+        switch (intent.getStringExtra("action")) {
+            case ACTION_PLAY:
+                beginPlaying();
+                break;
+            case ACTION_PAUSE:
+                stopPlaying();
+                break;
+            case ACTION_UPDATE_TAGS:
+                updateTags();
+                break;
+            case ACTION_NPAUSE:
+                PlayerState.setPlayingStatus(false);
+                m_builder.mActions.clear();
+                updateNotification();
 
-            if(sep != null)
-                sep.stop();
+                if (sep != null)
+                    sep.stop();
 
-            releaseWakeLocks();
+                releaseWakeLocks();
 
-            m_pbsBuilder.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1.0f, SystemClock.elapsedRealtime());
-            m_mediaSession.setPlaybackState(m_pbsBuilder.build());
-        } else if (intent.getStringExtra("action").equals(ACTION_MUTE)){
-            mutePlayer();
-        } else if (intent.getStringExtra("action").equals(ACTION_UNMUTE)){
-            unmutePlayer();
+                m_pbsBuilder.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1.0f, SystemClock.elapsedRealtime());
+                m_mediaSession.setPlaybackState(m_pbsBuilder.build());
+                break;
+            case ACTION_MUTE:
+                mutePlayer();
+                break;
+            case ACTION_UNMUTE:
+                unmutePlayer();
+                break;
         }
 
         return super.onStartCommand(intent, flags, startId);
