@@ -46,33 +46,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RadioService extends MediaBrowserServiceCompat {
+
+    // Define actions used in intents to control the service
     public static final String ACTION_PLAY = "io.r_a_d.radio.PLAY";
     public static final String ACTION_PAUSE = "io.r_a_d.radio.PAUSE";
     public static final String ACTION_UPDATE_TAGS = "io.r_a_d.radio.UPDATE_TAGS";
     private static final String ACTION_NPAUSE = "io.r_a_d.radio.NPAUSE";
     private static final String ACTION_MUTE = "io.r_a_d.radio.MUTE";
     private static final String ACTION_UNMUTE = "io.r_a_d.radio.UNMUTE";
-    private static final String CHANNEL_ID = "io.r_a_d.radio.NOTIFICATIONS";
+
+    // Define the stream URL
     private static final String RADIO_URL = "https://stream.r-a-d.io/main.mp3";
+
+    // Define the channel used by the notifications
+    private static final String CHANNEL_ID = "io.r_a_d.radio.NOTIFICATIONS";
 
     // Define the media root id for the MediaBrowser stuff
     private static final String MEDIA_ROOT_ID = "radio_root_id";
+
+    // Define manager locks
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
+
+    // Define the player volume
+    private float m_volume;
+
+    // Boolean keeping track of foreground
+    private boolean m_foreground;
+
+    // Define the music player
     private SimpleExoPlayer sep;
+
+    // Define the notification in android's swipedown menu
     private Notification notification;
+
+    // Define the managers
     private TelephonyManager mTelephonyManager;
     private AudioManager am;
     private NotificationManager m_nm;
+
+    // Define the builders
     private NotificationCompat.Builder m_builder;
-    private float m_volume;
-    private boolean m_foreground;
-    private MediaSessionCompat m_mediaSession;
     private PlaybackStateCompat.Builder m_pbsBuilder;
     private MediaMetadataCompat.Builder m_metaBuilder;
 
+    // Define the media session
+    private MediaSessionCompat m_mediaSession;
+
+    // Define the binder that gets use in conjunction with the main activity
     private final IBinder m_binder = new RadioBinder();
 
+    // Define the listener that will mute/unmute audio if there's an incoming call
     private final PhoneStateListener mPhoneListener = new PhoneStateListener() {
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -85,6 +109,8 @@ public class RadioService extends MediaBrowserServiceCompat {
         }
     };
 
+    // Define the listener that will control what happens when focus is changed such
+    // as when headphones are unplugged
     private AudioManager.OnAudioFocusChangeListener focusChangeListener =
             new AudioManager.OnAudioFocusChangeListener() {
                 @Override
@@ -111,6 +137,7 @@ public class RadioService extends MediaBrowserServiceCompat {
                 }
             };
 
+    // Define the broadcast receiver to handle any broadcasts
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
