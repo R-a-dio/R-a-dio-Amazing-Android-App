@@ -28,7 +28,7 @@ public class WebViewChat {
          - Set your username (to not type it every time, would it be possible?)
          - Hide the chat?
          - do more? */
-        webSetting.setTextZoom(80);
+        webSetting.setTextZoom(90);
 
         webSetting.setSupportMultipleWindows(true);
         // needs to open target="_blank" links as KiwiIRC links have this attribute.
