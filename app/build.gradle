@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+    /* Java 8 support is needed for ExoPlayer 2.10.5
+     * Source : https://github.com/google/ExoPlayer/issues/5276
+    * */
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "io.r_a_d.radio"
         minSdkVersion 16
@@ -25,9 +31,9 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.7.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.5'
     testImplementation 'junit:junit:4.12'
 
     // adding media dependency from Google Maven repository. From:
@@ -35,3 +41,4 @@ dependencies {
     def media_version = "1.1.0"
     implementation "androidx.media:media:$media_version"
 }
+

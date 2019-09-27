@@ -447,7 +447,8 @@ public class RadioService extends MediaBrowserServiceCompat {
     }
 
     private void createMediaPlayer() {
-        sep = ExoPlayerFactory.newSimpleInstance(
+        // new prototype for ExoPlayer 2.10.5 : needs context (this)
+        sep = ExoPlayerFactory.newSimpleInstance(this,
                 new DefaultRenderersFactory(this),
                 new DefaultTrackSelector(),
                 new DefaultLoadControl());
