@@ -6,10 +6,14 @@
     <string name="request_page">Request</string>
     <string name="news_page">News</string>
     <string name="schedule_page">Schedule</string>
+    <string name="chat_page">Chat</string>
+
     <string name="title_activity_slided">LeftSlider</string>
     <string name="now_playing">NOWPLAYING</string>
     <string name="requests">REQUESTS</string>
     <string name="news">NEWS</string>
+    <string name="chat">CHAT</string>
+
     <string name="connecting">Connecting...</string>
     <string name="dots">...</string>
 

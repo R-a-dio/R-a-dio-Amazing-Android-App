@@ -8,7 +8,8 @@ public enum ModelObjectMain {
 
     NOWPLAYING(R.string.now_playing, R.layout.now_playing),
     REQUESTS(R.string.requests, R.layout.requests),
-    NEWS(R.string.news, R.layout.news);
+    NEWS(R.string.news, R.layout.news),
+    CHAT(R.string.chat, R.layout.chat);
 
     private int mTitleResId;
     private int mLayoutResId;

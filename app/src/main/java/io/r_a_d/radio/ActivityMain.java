@@ -24,6 +24,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
+
+import android.webkit.WebView; // used for KiwiIRC embedding
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -58,6 +61,8 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private boolean firstSearchClick = true;
     private boolean newsSet = false;
     private boolean m_bound = false;
+    private boolean isChatLoaded = false;
+
     private ViewPager viewPager;
     private JSONScraperTask jsonTask = new JSONScraperTask(this, 0);
     private DJImageTask djimageTask = new DJImageTask(this);
@@ -68,6 +73,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
     private Requestor mRequestor;
     private View searchFooter;
     private RadioService m_service;
+    private WebViewChat webViewChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +84,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(this));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(4);
 
         viewPager.addOnPageChangeListener(this);
 
@@ -107,6 +113,7 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
 
         if (PlayerState.isServiceStarted())
             bindToService();
+
     }
 
 
@@ -167,6 +174,16 @@ public class ActivityMain extends AppCompatActivity implements ViewPager.OnPageC
                 title_text.setText(R.string.news_page);
                 if(!newsSet)
                     scrapeNews(NEWS_API);
+                break;
+            case R.id.chat_page:
+                title_text.setText("Chat");
+                if (this.isChatLoaded == false)
+                {
+                    WebView webView = findViewById(R.id.chat_webview);
+                    this.webViewChat = new WebViewChat(webView);
+                    this.webViewChat.start();
+                    this.isChatLoaded = true;
+                }
                 break;
         }
     }

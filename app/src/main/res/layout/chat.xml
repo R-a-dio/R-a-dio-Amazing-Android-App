@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:id="@+id/chat_page" >
+
+    <!--
+        Yattoz - this is a simple embedded WebView to display KiwiIRC in the app.
+        KiwiIRC is a decent IRC, but the website is clunky and you must scroll a lot.
+        This WebView is just the size of the screen, to make it practical.
+     -->
+
+    <WebView
+        android:id="@+id/chat_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>
