@@ -20,12 +20,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaBrowserServiceCompat;
+import androidx.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaButtonReceiver;
+import androidx.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.telephony.PhoneStateListener;
@@ -157,7 +157,7 @@ public class RadioService extends MediaBrowserServiceCompat {
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         if (powerManager != null)
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KilimDankLock");
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "lock:KilimDankLock");
 
         WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (wifiManager != null)
@@ -269,7 +269,7 @@ public class RadioService extends MediaBrowserServiceCompat {
             m_builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         }
 
-        m_builder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle()
+        m_builder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                 .setMediaSession(m_mediaSession.getSessionToken())
                 .setShowActionsInCompactView(0));
 
@@ -447,7 +447,9 @@ public class RadioService extends MediaBrowserServiceCompat {
     }
 
     private void createMediaPlayer() {
-        sep = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(this),
+        // new prototype for ExoPlayer 2.10.5 : needs context (this)
+        sep = ExoPlayerFactory.newSimpleInstance(this,
+                new DefaultRenderersFactory(this),
                 new DefaultTrackSelector(),
                 new DefaultLoadControl());
     }
